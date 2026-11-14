@@ -1,0 +1,15 @@
+.overlay { position: fixed; inset: 0; z-index: 50; background: rgba(14, 26, 51, 0.86); display: grid; place-items: center; }
+.stage { display: flex; flex-direction: column; align-items: center; gap: 1rem; perspective: 900px; }
+.card { position: relative; transform-style: preserve-3d; transition: transform 0.3s ease, box-shadow 0.3s ease; border-radius: 12px; }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.front { transform: rotateY(180deg); }
+.flipped { transform: rotateY(180deg); }
+.tilt { transform: rotate(-2deg); }
+.glow { box-shadow: 0 0 0 4px var(--type), 0 0 36px 8px var(--type); }
+.sweep { position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.65) 45%, transparent 70%); background-size: 250% 100%; animation: sweep 0.3s linear 1; }
+@keyframes sweep { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.caption { margin: 0; font-family: var(--font-heading); font-weight: 800; letter-spacing: 0.14em; color: #fff; min-height: 1.5em; }
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+  .sweep { animation: none; }
+}

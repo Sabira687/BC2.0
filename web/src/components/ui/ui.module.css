@@ -1,0 +1,47 @@
+.visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.stars { display: inline-flex; align-items: baseline; gap: 8px; }
+.starRow { letter-spacing: 2px; line-height: 1; white-space: nowrap; }
+.starText { font-size: 13px; color: var(--muted); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1.5px solid; padding: 8px 12px; border-radius: 4px;
+  font-family: var(--font-mono); font-size: 12px;
+}
+
+.event {
+  background: #fff; border: 1px solid var(--line); border-left: 4px solid;
+  border-radius: 3px; padding: 8px 12px;
+  font-family: var(--font-mono); font-size: 13px; line-height: 1.4; color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.stampWrap { margin: 0; display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+.stampCaption { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.25; }
+.stampEmpty {
+  box-sizing: border-box; border-radius: 50%; border: 2px dashed #c9c1b0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); letter-spacing: 0.14em; color: #6f6858;
+}
+.stamp {
+  box-sizing: border-box; border-radius: 50%; padding: 4px;
+  border: 3px solid var(--ink); transform: rotate(var(--rot)); opacity: 0.92;
+  /* serrated rubber edge: dotted outer ring */
+  outline: 2px dotted var(--ink); outline-offset: 2px;
+}
+.stampFresh { animation: press 0.5s ease-out; }
+@keyframes press {
+  0% { transform: rotate(var(--rot)) scale(1.5); opacity: 0; }
+  70% { transform: rotate(var(--rot)) scale(0.94); opacity: 1; }
+  100% { transform: rotate(var(--rot)) scale(1); opacity: 0.92; }
+}
+.stampInner {
+  width: 100%; height: 100%; border-radius: 50%; border: 1.5px solid var(--ink); box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: calc(var(--u) * 2px); text-align: center; color: var(--ink);
+  background: repeating-radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0) 0 3px, rgba(255, 255, 255, 0.18) 3px 4px);
+}
+.stampTop { font-family: var(--font-mono); font-size: calc(var(--u) * 9px); letter-spacing: 0.14em; }
+.stampName { font-family: var(--font-heading); font-weight: 800; font-size: calc(var(--u) * 11.5px); line-height: 1.05; text-transform: uppercase; padding: 0 calc(var(--u) * 6px); }
+.stampBottom { font-family: var(--font-mono); font-size: calc(var(--u) * 8.5px); letter-spacing: 0.14em; }
+@media (prefers-reduced-motion: reduce) { .stampFresh { animation: none; } }

@@ -1,0 +1,99 @@
+.page { display: flex; flex-direction: column; gap: 24px; }
+.head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; }
+.head h1 { margin: 6px 0 4px; font-size: clamp(2.6rem, 6vw, 4rem); text-transform: uppercase; }
+.head p { margin: 0; color: var(--muted); max-width: 560px; }
+.plaque { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; background: #fffbeb; border: 1.5px dashed #b45309; color: var(--ink); padding: 12px 16px; max-width: 520px; font-size: 14px; line-height: 1.5; }
+.plaque strong { font-family: var(--font-mono); letter-spacing: 0.14em; font-size: 11px; color: #92400e; }
+.plaque p { margin: 0; flex: 1 1 240px; }
+.plaque button { font-family: var(--font-mono); letter-spacing: 0.1em; font-size: 12px; border-radius: 0; }
+
+.sky { background: radial-gradient(ellipse at 45% 40%, #1b2e5c 0%, #0e1a33 45%, #050611 100%); color: #fff; padding: 22px 26px 24px; }
+.skyHead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.skyHead h2 { color: #fff; margin: 4px 0 0; font-size: clamp(1.6rem, 3.5vw, 2.2rem); text-transform: uppercase; }
+.skyHead p { margin: 0; max-width: 360px; color: var(--night-text); font-size: 13.5px; line-height: 1.5; }
+.skyStage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; margin-top: 6px; }
+.skyScroll { overflow-x: auto; }
+.skySvg { display: block; width: 100%; min-width: 850px; max-width: 980px; height: auto; margin: 0 auto; }
+.skyLabel { font-family: var(--font-mono); font-size: 15px; } /* x0.89 at the min width = ~13px on screen */
+.minis { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; }
+.mini { width: 150px; height: auto; }
+.miniName { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: 1px; }
+.miniSub { font-family: var(--font-mono); font-size: 12px; opacity: 0.9; }
+.twinkle { animation: twinkle 3s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+.skyFoot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-top: 6px; }
+.skyName { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 0.9; text-transform: uppercase; }
+.bar { display: flex; align-items: center; gap: 12px; margin-top: 8px; font-family: var(--font-mono); font-size: 12px; }
+.barLabel { color: #9fb0cf; }
+.barCells { display: flex; gap: 3px; width: 220px; }
+.barCells span { flex: 1; height: 8px; }
+.cellOn { background: #fcd34d; }
+.cellOff { background: #2b3b5e; }
+.barCount { color: #fcd34d; }
+.skyNote { background: rgba(5, 6, 17, 0.7); border: 1px solid #2b3b5e; padding: 12px 16px; max-width: 420px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; color: #d5dbec; }
+.noteNext { color: #6af7ff; }
+.noteDone { color: #fcd34d; }
+
+.cols { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.passport { flex: 999 1 640px; min-width: 0; display: flex; filter: drop-shadow(0 12px 22px rgba(23, 32, 51, 0.16)); }
+.passStub, .passBody { background-color: #fff8e6; background-image: repeating-radial-gradient(circle at 0 0, rgba(183, 121, 31, 0.07) 0 2px, transparent 2px 9px), repeating-radial-gradient(circle at 100% 100%, rgba(29, 63, 184, 0.05) 0 2px, transparent 2px 11px); border: 1px solid #e7c99a; }
+.passStub { flex: none; width: 54px; border-right: 3px dotted #c9a46a; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; }
+.passStub span { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.3em; color: #8a5a12; white-space: nowrap; }
+.passBody { flex: 1; min-width: 0; border-left: 0; border-radius: 0 10px 10px 0; padding: 20px 24px; }
+.passHead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.passKicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; color: #8a5a12; }
+.passHead h2 { margin: 4px 0 0; font-size: clamp(1.4rem, 3vw, 2rem); text-transform: uppercase; }
+.passCount { font-family: var(--font-display); font-weight: 800; font-size: 48px; line-height: 0.9; color: #b91c1c; }
+.passCount small { color: #8a5a12; font-size: 48px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 14px 6px; margin-top: 16px; justify-items: center; }
+.slot { display: flex; flex-direction: column; align-items: center; }
+.ring { box-sizing: border-box; flex: none; width: 102px; height: 102px; aspect-ratio: 1 / 1; border: 2.5px solid; border-radius: 50%; background: rgba(255, 255, 255, 0.6); display: flex; align-items: center; justify-content: center; }
+.ring figcaption { display: none; }
+.slotName { margin-top: 6px; max-width: 108px; font-size: 12.5px; font-weight: 600; line-height: 1.2; text-align: center; color: #172033; }
+.slotName[data-earned="false"] { color: #6f6858; }
+.legendNote { margin-left: auto; }
+.ring_start { border-color: var(--ink-start); }
+.ring_easy { border-color: var(--ink-easy); }
+.ring_medium { border-color: var(--ink-medium); }
+.ring_hard { border-color: var(--ink-hard); }
+.legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; color: #5d5646; text-transform: uppercase; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
+
+.can { flex: 1 1 300px; min-width: 0; background: var(--sheet); border: 1px solid var(--line); border-top: 4px solid var(--pass); padding: 18px 20px; }
+.canKicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: #166534; }
+.canList { list-style: none; margin: 8px 0 0; padding: 0; }
+.canList li { display: flex; gap: 10px; padding: 10px 0; border-top: 1px dashed var(--line); }
+.tick { flex: none; color: var(--pass); font-weight: 700; }
+.canText { font-weight: 600; }
+.canDetail { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.empty { font-size: 14px; color: var(--muted); margin: 10px 0 0; }
+
+.codeBox { display: flex; flex-wrap: wrap; gap: 16px 24px; background: var(--sheet); border: 1px solid var(--line); border-left: 4px solid var(--test); padding: 18px 22px; align-items: flex-start; }
+.codeIntro { flex: 1 1 280px; }
+.codeIntro strong { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--test); display: block; }
+.codeIntro p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.codeForm { flex: 2 1 420px; min-width: 0; }
+.foot { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; font-size: 14px; color: var(--muted); }
+
+@media (max-width: 560px) { .passStub { display: none; } .passBody { border-left: 1px solid #e7c99a; border-radius: 10px; } }
+@media (prefers-reduced-motion: reduce) { .twinkle { animation: none; } }
+
+/* Narrow screens: a vertical list of the 7 stars instead of the scrolling constellation. */
+.skyList { display: none; list-style: none; margin: 8px 0 0; padding: 0; font-family: var(--font-mono); font-size: 13px; }
+.skyItem { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #2b3b5e; color: #9fb0cf; }
+.skyItem[data-lit="true"] { color: #e2e8f0; }
+.skyItem[data-next="true"] { color: #6af7ff; }
+.skyDot { flex: none; width: 1.2em; text-align: center; font-size: 16px; }
+.skyItem[data-lit="true"] .skyDot { color: #fcd34d; }
+.skyState { margin-left: auto; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+@media (max-width: 760px) {
+  .skyList { display: block; }
+  .skyScroll { display: none; }
+  .sky { padding: 18px 16px 20px; }
+  .skyName { font-size: 32px; }
+  .barCells { width: 160px; }
+}
+@media (max-width: 700px) {
+  .foot > a { display: inline-flex; align-items: center; min-height: 44px; }
+}

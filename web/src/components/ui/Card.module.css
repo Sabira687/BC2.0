@@ -1,0 +1,144 @@
+/* Card 5:7. All lengths are multiples of --u (= width / 220). */
+.card {
+  position: relative;
+  flex: none;
+  border-radius: calc(var(--u) * 10px);
+  padding: calc(var(--u) * 7.3px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset, 0 12px 26px rgba(14, 26, 51, 0.2);
+  isolation: isolate;
+}
+.frame,
+.gloss,
+.sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--u) * 10px);
+  pointer-events: none;
+}
+.frame { z-index: -1; }
+.gloss { background: linear-gradient(165deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 32%); }
+.sheen {
+  mix-blend-mode: soft-light;
+  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.75) 32%, rgba(240, 171, 252, 0.6) 42%, rgba(125, 211, 252, 0.6) 52%, transparent 70%);
+  background-size: 250% 250%;
+  animation: sheen 4.5s linear infinite;
+}
+.holo { background-size: 250% 250%; animation: sheen 4.5s linear infinite; }
+.holoCard:hover .sheen { animation-duration: 1.6s; }
+.holoCard { transition: transform 0.25s ease; }
+.holoCard:hover { transform: translateY(-2px); }
+@keyframes sheen { 0% { background-position: 0% 50%; } 100% { background-position: 250% 50%; } }
+@keyframes twinkle { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+
+.head {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: calc(var(--u) * 10.1px);
+  letter-spacing: 0.14em;
+  padding: calc(var(--u) * 1.8px) calc(var(--u) * 3.7px) calc(var(--u) * 5.5px);
+}
+/* Night pill behind the header text keeps white-on-frame contrast >= 4.5:1 on the light gradient stops. */
+.headDark {
+  background: rgba(14, 26, 51, 0.82);
+  border-radius: calc(var(--u) * 5px);
+  margin: 0 0 calc(var(--u) * 5.5px);
+  padding: calc(var(--u) * 3.5px) calc(var(--u) * 6px);
+}
+.window {
+  position: relative;
+  flex: 1 1 0;
+  border-radius: calc(var(--u) * 6px);
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 42%, var(--glow) 0%, #0e1a33 68%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.twinkle {
+  position: absolute;
+  inset: 0;
+  animation: twinkle 3s ease-in-out infinite;
+  background-image: radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 75% 20%, #bae6fd 50%, transparent 51%),
+    radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 30% 75%, #f5d0fe 50%, transparent 51%);
+}
+.shape {
+  width: calc(var(--u) * 88px);
+  height: calc(var(--u) * 88px);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.35));
+}
+.body {
+  position: relative;
+  margin-top: calc(var(--u) * 6.4px);
+  background: #fff;
+  border-radius: calc(var(--u) * 6px);
+  padding: calc(var(--u) * 8.2px) calc(var(--u) * 9.2px) calc(var(--u) * 7.3px);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 3.7px);
+}
+.title { font-family: var(--font-heading); font-weight: 800; font-size: calc(var(--u) * 15.6px); line-height: 1.1; color: #172033; }
+.overline { font-family: var(--font-mono); font-size: calc(var(--u) * 9.2px); letter-spacing: 0.14em; color: #566072; }
+.rarity { font-family: var(--font-mono); font-size: calc(var(--u) * 9.2px); letter-spacing: 0.12em; font-weight: 500; }
+.props { font-size: calc(var(--u) * 10.5px); color: #566072; }
+.flavor { font-style: italic; font-size: calc(var(--u) * 11px); color: #172033; }
+.foot { display: flex; justify-content: space-between; align-items: center; margin-top: calc(var(--u) * 1.8px); }
+.tool, .brand { font-family: var(--font-mono); font-size: calc(var(--u) * 9.2px); color: #566072; }
+.tool { letter-spacing: 0.1em; }
+.brand { letter-spacing: 0.14em; }
+.newTag {
+  position: absolute;
+  top: calc(var(--u) * -7.3px);
+  right: calc(var(--u) * -7.3px);
+  background: #172033;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: calc(var(--u) * 10.1px);
+  letter-spacing: 0.14em;
+  padding: calc(var(--u) * 3.7px) calc(var(--u) * 7.3px);
+  border-radius: 3px;
+  box-shadow: 0 4px 10px rgba(14, 26, 51, 0.25);
+}
+
+/* Closed / locked: night card back */
+.closed {
+  padding: 0;
+  background-color: #0e1a33;
+  background-image: radial-gradient(1px 1px at 18px 26px, rgba(255, 255, 255, 0.6) 50%, transparent 51%), radial-gradient(1px 1px at 120px 80px, rgba(186, 230, 253, 0.55) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 70px 140px, rgba(255, 255, 255, 0.45) 50%, transparent 51%);
+  background-size: 160px 160px, 210px 210px, 290px 290px;
+  border: 1px solid #23345a;
+  box-shadow: 0 10px 24px rgba(14, 26, 51, 0.22);
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 9.2px);
+  overflow: hidden;
+}
+.hex {
+  width: calc(var(--u) * 77px);
+  height: calc(var(--u) * 88px);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: linear-gradient(160deg, #33476f, #1b2a4a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: calc(var(--u) * 34.8px);
+  color: #8fa3c8;
+}
+.closedRare { border-color: #0e7490; box-shadow: 0 0 0 2px rgba(103, 232, 249, 0.35), 0 0 26px rgba(34, 211, 238, 0.35), 0 10px 24px rgba(14, 26, 51, 0.22); }
+.closedLegendary { border-color: #b45309; box-shadow: 0 0 0 2px rgba(252, 211, 77, 0.45), 0 0 30px rgba(245, 158, 11, 0.45), 0 10px 24px rgba(14, 26, 51, 0.22); }
+.closedRarity { font-family: var(--font-mono); font-size: calc(var(--u) * 9.6px); letter-spacing: 0.16em; }
+.closedCode { font-family: var(--font-mono); font-size: calc(var(--u) * 10.1px); letter-spacing: 0.2em; color: #8fa3c8; }
+.closedNote { font-size: calc(var(--u) * 11px); color: #8fa3c8; }
+
+@media (prefers-reduced-motion: reduce) {
+  .holo, .sheen, .twinkle { animation: none; }
+  .holoCard, .holoCard:hover { transition: none; transform: none; }
+}
