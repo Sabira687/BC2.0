@@ -4,7 +4,7 @@
 
 Each card is a digital item with its own story: the **Three-Tooth Key**, the **Proving Lock**, the **Pocket Compass**. Paste a card into Claude and it becomes your coach for one skill, practising on your real work: emails, reports, meeting notes. Stars and stamps come only when Claude checks what you did. Collect the set, earn the stamps, keep every card. No streaks, no timers, nothing random.
 
-**Live:** _link added after deploy_ · no sign-up, works in the browser.
+**Live: [aigo-collection.vercel.app](https://aigo-collection.vercel.app)** · no sign-up, works in the browser and on a phone.
 
 ## Try it in 3 minutes
 
