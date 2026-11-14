@@ -37,10 +37,8 @@
 .step[data-done="true"] a { color: #94a3b8; text-decoration: line-through; }
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Phone: bottom-left, narrow. On the console the sticky composer owns the bottom edge, so there the plate is part of
-   the page flow after the content (never over the tabs, composer or SEND). */
+/* Phone: a floating plate always ends up over something (toolbar, buttons) while the page scrolls, so on narrow
+   screens the plate is part of the page flow after the content on every route — it never covers a control. */
 @media (max-width: 700px) {
-  .dock { left: 12px; right: auto; bottom: 12px; width: min(280px, calc(100vw - 24px)); }
-  .dock[data-open="false"] { width: auto; }
-  .dock[data-route="console"] { position: static; width: auto; max-width: calc(100vw - 24px); margin: 0 12px 16px; }
+  .dock { position: static; width: auto; max-width: calc(100vw - 24px); margin: 0 12px 16px; }
 }
