@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Console · Lesson</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;family=Caveat:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F0E8}
+a{color:#1D4ED8}a:hover{color:#172033}
+@keyframes v4Sheen{0%{background-position:0% 50%}100%{background-position:250% 50%}}
+@keyframes v4Twinkle{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes v4Glow{0%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}40%{box-shadow:0 0 0 6px rgba(37,99,235,.28)}100%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}}
+@keyframes v4Spin{to{transform:rotate(360deg)}}
+.v4-holo{background-size:250% 250%;animation:v4Sheen 4.5s linear infinite}
+.v4-twinkle{animation:v4Twinkle 3s ease-in-out infinite}
+@keyframes v5Float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes v5Blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.v5-lift{transition:transform .22s ease, box-shadow .22s ease, filter .22s ease}
+.v5-lift:hover,.v5-lift:focus-visible{transform:translateY(-12px) rotate(-1.5deg);filter:drop-shadow(0 18px 18px rgba(14,26,51,.28))}
+.v5-float{animation:v5Float 4.2s ease-in-out infinite}
+.v5-blink{animation:v5Blink 1s infinite}
+a:focus-visible,button:focus-visible{outline:2px solid #3B82FF;outline-offset:3px}
+@media (prefers-reduced-motion: reduce){.v4-holo,.v4-twinkle,.v5-float,.v5-blink{animation:none}.v5-lift:hover{transform:none}}
+</style>
+</helmet>
+<div style="background: #F4F0E8; color: #172033; font-family: 'IBM Plex Sans', sans-serif; min-height: 100vh">
+<header style="background-color: #0E1A33; background-image: radial-gradient(1px 1px at 18px 26px, rgba(255,255,255,.6) 50%, transparent 51%), radial-gradient(1px 1px at 120px 80px, rgba(186,230,253,.55) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 70px 140px, rgba(255,255,255,.45) 50%, transparent 51%); background-size: 160px 160px, 210px 210px, 290px 290px; ">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 34px">
+      <a href="V4Landing.dc.html" aria-label="AIGO Collection home" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px"><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 26px; letter-spacing: .18em; color: #FFFFFF">AIGO</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .3em; color: #6AF7FF">COLLECTION</span></a>
+      <nav aria-label="App" style="display: flex; flex-wrap: wrap; gap: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase"><a href="V4Collection.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Collection</a><a href="V4Console.dc.html" aria-current="page" style="text-decoration: none; color: #FFFFFF; border-bottom: 2px solid #6AF7FF; padding: 6px 0">Console</a><a href="V4Guide.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Guide</a><a href="V4Progress.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Progress</a><a href="V4Pass.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Premium</a></nav>
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .12em">
+        <span style="background: #FDE68A; color: #172033; padding: 5px 8px">DEMO · SAMPLE PLAYER</span>
+        <span style="border: 1px solid #3B4D74; color: #E2E8F0; padding: 5px 8px">JOHN · MENTOR</span>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 1360px; margin: 0 auto; padding: 18px 24px 28px">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px">
+      <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em; color: #566072">02 / CONSOLE</div><h1 style="margin: 6px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 44px; line-height: .9">Your AI, with an item inside</h1></div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #566072; letter-spacing: .08em">A real Claude chat. Paste an item and it becomes your coach.</div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+      <section aria-label="AIGO console" style="flex: 999 1 680px; min-width: 0; background: #0B1020; border: 1px solid #1E2A3D; box-shadow: 0 20px 40px rgba(5,6,17,.25); display: flex; flex-direction: column">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 10px 14px; border-bottom: 1px solid #1E2A3D">
+        <span aria-hidden="true" style="display: flex; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #FF5F57"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #FEBC2E"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #28C840"></span></span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C8BAA">john@aigo-console:~ · claude</span>
+        <nav aria-label="Console mode" style="display: flex; gap: 6px; margin-left: 8px"><a href="V4Console.dc.html" aria-current="page" style="text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .14em; padding: 6px 12px; color: #050611; background: #6AF7FF; border: 1px solid #6AF7FF">LESSON</a><a href="V4WorkChat.dc.html" style="text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .14em; padding: 6px 12px; color: #9FB0CF; background: transparent; border: 1px solid #2B3B5E">WORK CHAT</a></nav>
+        <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .14em; color: #39FF88">● CLAUDE · LIVE</span>
+      </div>
+      <div aria-live="polite" style="height: 690px; overflow-y: auto; display: flex; flex-direction: column-reverse"><div style="flex: none; min-height: 100%; box-sizing: border-box; padding: 22px 22px 14px; display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6AF7FF; flex: none; width: 72px">john ›</span><div style="flex: 1; min-width: 0"><div style="display: inline-flex; gap: 14px; align-items: center; border: 1px solid #60A5FA; background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,0)); padding: 10px 16px 10px 10px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)">
+            <div style="width: 64px; height: 64px; flex: none; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #60A5FA55 0%, #0E1A33 70%); border-radius: 6px"><svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><linearGradient id="aigoBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".3" stop-color="#F8C65A"/><stop offset=".68" stop-color="#C9841C"/><stop offset="1" stop-color="#6E400C"/></linearGradient><radialGradient id="aigoKeyGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#BFDBFE" stop-opacity=".7"/><stop offset="1" stop-color="#60A5FA" stop-opacity="0"/></radialGradient>
+  <radialGradient id="aigoKeyGem" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#E0F2FE"/><stop offset=".45" stop-color="#60A5FA"/><stop offset="1" stop-color="#1E3A8A"/></radialGradient></defs>
+  <circle cx="100" cy="100" r="84" fill="url(#aigoKeyGlow)"/>
+  <g transform="rotate(-38 100 100)">
+    <rect x="80" y="93" width="96" height="14" rx="5" fill="url(#aigoBrass)"/>
+    <rect x="86" y="95" width="86" height="3" rx="1.5" fill="#FFFBEB" opacity=".75"/>
+    <rect x="128" y="104" width="11" height="24" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="145" y="104" width="11" height="34" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="162" y="104" width="11" height="18" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="74" y="86" width="10" height="28" rx="3" fill="url(#aigoBrass)"/>
+    <circle cx="48" cy="100" r="27" fill="none" stroke="url(#aigoBrass)" stroke-width="13"/>
+    <circle cx="48" cy="100" r="33" fill="none" stroke="#FFF4C2" stroke-width="1.2" opacity=".55"/>
+    <circle cx="48" cy="100" r="10" fill="url(#aigoKeyGem)" stroke="#FFF4C2" stroke-width="2"/>
+  </g>
+  <path d="M150 41 L151.75 46.25 L157 48 L151.75 49.75 L150 55 L148.25 49.75 L143 48 L148.25 46.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M42 145 L43.25 148.75 L47 150 L43.25 151.25 L42 155 L40.75 151.25 L37 150 L40.75 148.75 Z" fill="#FFFFFF" opacity="0.7"/><path d="M166 146 L167.0 149.0 L170 150 L167.0 151.0 L166 154 L165.0 151.0 L162 150 L165.0 149.0 Z" fill="#FFFFFF" opacity="0.6"/>
+</svg></div>
+            <div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #60A5FA">■ LEARN · SET 01 · ● COMMON</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 24px; color: #FFFFFF; line-height: 1.05">Three-Tooth Key</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #7C8BAA">item pasted · hidden instructions inside · <u>view</u></div>
+            </div>
+          </div></div></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><pre style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #D5DBEC; white-space: pre-wrap; word-break: break-word"><span style="color: #6AF7FF; font-weight: 600;">▶ ITEM ACTIVATED · LEARN · Three-Tooth Key</span>
+<span style="color: #D5DBEC;">Hi John! I'm your coach for this item. Three short lessons on your real work.</span></pre></div></div>
+<div style="display: flex; align-items: center; gap: 12px; color: #7C8BAA; font-family: 'IBM Plex Mono', monospace; font-size: 12px"><span style="flex: 1; height: 1px; background: #1E2A3D"></span>LESSON 1.1 · THE BRIEF FORMULA · ✓ ★ · 12 earlier messages<span style="flex: 1; height: 1px; background: #1E2A3D"></span></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><pre style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #D5DBEC; white-space: pre-wrap; word-break: break-word"><span style="color: #60A5FA;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span style="color: #FFFFFF; font-weight: 600;"> LESSON 1.2 · ASK FOR THE SHAPE</span><span style="color: #7C8BAA;">        step 4/7  </span><span style="color: #60A5FA;">████</span><span style="color: #3B4D74;">░░░</span>
+<span style="color: #60A5FA;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span style="color: #D5DBEC;">Claude can write anything, but it can't guess the shape you need.</span>
+<span style="color: #D5DBEC;">So say it: the format, the length and what comes first.</span>
+
+<span style="color: #7C8BAA;">┌─ MONDAY'S MEETING NOTES ──────────────────────────────</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #D5DBEC;">printer arrives Thursday · John sets it up</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #D5DBEC;">offsite venue booked by the 20th · Anna</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #D5DBEC;">budget request to finance on Friday · Mark</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #D5DBEC;">standup moves to 9:30</span>
+<span style="color: #7C8BAA;">└───────────────────────────────────────────────────────</span>
+
+<span style="color: #60A5FA;">┌─ YOUR TURN ───────────────────────────────────────────</span>
+<span style="color: #60A5FA;">│ </span><span style="color: #D5DBEC;">Ask me for an update you can post in your team chat:</span>
+<span style="color: #60A5FA;">│ </span><span style="color: #D5DBEC;">Turn these notes into </span><span style="color: #FCD34D; font-weight: 600;">___</span><span style="color: #D5DBEC;">. Format: </span><span style="color: #FCD34D; font-weight: 600;">___</span><span style="color: #D5DBEC;">.</span>
+<span style="color: #60A5FA;">│ </span><span style="color: #D5DBEC;">Length: </span><span style="color: #FCD34D; font-weight: 600;">___</span><span style="color: #D5DBEC;">. Start with </span><span style="color: #FCD34D; font-weight: 600;">___</span><span style="color: #D5DBEC;">.</span>
+<span style="color: #60A5FA;">└───────────────────────────────────────────────────────</span></pre></div></div>
+<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6AF7FF; flex: none; width: 72px">john ›</span><div style="flex: 1; min-width: 0"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #FFFFFF">{{lastSent}}</div></div></div></sc-if>
+<sc-if value="{{checking}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #7C8BAA">checking your ask</span><span class="v5-blink" style="display: inline-block; width: 8px; height: 16px; background: #6AF7FF; vertical-align: middle; margin-left: 6px"></span></div></div></sc-if>
+<sc-if value="{{passed}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><pre style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #D5DBEC; white-space: pre-wrap; word-break: break-word"><span style="color: #39FF88;">┌─ CHECK ───────────────────────────────────────────────</span>
+<span style="color: #39FF88;">│ </span><span style="color: #39FF88;">[✓] </span><span style="color: #D5DBEC;">format       3 bullets with owners</span>
+<span style="color: #39FF88;">│ </span><span style="color: #39FF88;">[✓] </span><span style="color: #D5DBEC;">length       under 60 words</span>
+<span style="color: #39FF88;">│ </span><span style="color: #39FF88;">[✓] </span><span style="color: #D5DBEC;">comes first  the decision</span>
+<span style="color: #39FF88;">└───────────────────────────────────────────────────────</span>
+
+<span style="color: #39FF88; font-weight: 600;">✅ CHECK PASSED · </span><span style="color: #FCD34D; font-weight: 600;">★★</span><span style="color: #4B5A7A;">☆</span>
+<span style="color: #86EFAC; font-weight: 600;">✦ STAMP EARNED · Explicit format</span>
+
+<span style="color: #7C8BAA;">┌─ YOUR UPDATE ─────────────────────────────────────────</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #FFFFFF; font-weight: 600;">Standup moves to 9:30, starting Monday.</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #D5DBEC;">• Anna books the offsite venue by the 20th</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #D5DBEC;">• Mark sends the budget request on Friday</span>
+<span style="color: #7C8BAA;">│ </span><span style="color: #D5DBEC;">• John sets up the new printer on Thursday</span>
+<span style="color: #7C8BAA;">└───────────────────────────────────────────────────────</span>
+
+<span style="color: #D5DBEC;">Next: Lesson 1.3 · Give it the material, then the final task.</span>
+<span style="color: #6AF7FF; font-weight: 600;">[1] </span><span style="color: #D5DBEC;">next lesson    </span><span style="color: #6AF7FF; font-weight: 600;">[2] </span><span style="color: #D5DBEC;">more practice</span></pre></div></div></sc-if>
+      </div></div>
+      <form onSubmit="{{send}}" style="border-top: 1px solid #1E2A3D; padding: 12px 14px 14px">
+        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px; border: 1px solid #60A5FA; color: #60A5FA; padding: 4px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .1em; box-shadow: 0 0 14px #60A5FA55">■ THREE-TOOTH KEY · ACTIVE</div>
+        <div style="display: flex; gap: 10px; align-items: flex-end">
+          <label style="flex: 1; display: flex; gap: 10px; align-items: flex-start; border: 1.5px solid #60A5FA; background: #0E1528; padding: 10px 12px">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #6AF7FF; padding-top: 2px">john ›</span>
+            <span style="position: absolute; left: -9999px">Your message</span>
+            <textarea rows="3" value="{{draft}}" onChange="{{type}}" placeholder="Type your answer, or use the hint on the right" style="flex: 1; resize: vertical; border: 0; outline: none; background: transparent; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.55"></textarea>
+          </label>
+          
+          <button type="submit" style="cursor: pointer; border: 0; background: #3B82FF; color: #050611; padding: 15px 20px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 13px; letter-spacing: .14em; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)">SEND ↵</button>
+        </div>
+      </form>
+    </section>
+      <aside aria-label="Your item and hints" style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+      <div style="background: #FFFFFF; border: 1px solid #DCD4C4; border-top: 4px solid #2563EB; padding: 18px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .18em; color: #2563EB">ACTIVE ITEM</div>
+        <div style="display: flex; gap: 14px; align-items: center; margin-top: 10px">
+          <div style="flex: none">
+            <sc-if value="{{notPassed}}" hint-placeholder-val="{{ true }}"><div role="img" aria-label="LEARN card: Three-Tooth Key, common, 1 of 3 stars" style="position: relative; flex: none; width: 104px; height: 146px; border-radius: 10px; padding: 3.5px; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 12px 26px rgba(14,26,51,.20)">
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(150deg, #60A5FA 0%, #2563EB 45%, #1E3A8A 100%)"></div>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 4.8px; letter-spacing: .14em; color: #FFFFFF; padding: 0.9px 1.7px 2.6px"><span>■ LEARN</span><span>S01 · 1/3</span></div>
+            <div style="position: relative; flex: 1 1 0; border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, rgba(96,165,250,0.55) 0%, #0E1A33 68%); display: flex; align-items: center; justify-content: center">
+              <div aria-hidden="true" class="v4-twinkle" style="position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 75% 20%, #BAE6FD 50%, transparent 51%), radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 30% 75%, #F5D0FE 50%, transparent 51%)"></div>
+              <svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><linearGradient id="aigoBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".3" stop-color="#F8C65A"/><stop offset=".68" stop-color="#C9841C"/><stop offset="1" stop-color="#6E400C"/></linearGradient><radialGradient id="aigoKeyGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#BFDBFE" stop-opacity=".7"/><stop offset="1" stop-color="#60A5FA" stop-opacity="0"/></radialGradient>
+  <radialGradient id="aigoKeyGem" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#E0F2FE"/><stop offset=".45" stop-color="#60A5FA"/><stop offset="1" stop-color="#1E3A8A"/></radialGradient></defs>
+  <circle cx="100" cy="100" r="84" fill="url(#aigoKeyGlow)"/>
+  <g transform="rotate(-38 100 100)">
+    <rect x="80" y="93" width="96" height="14" rx="5" fill="url(#aigoBrass)"/>
+    <rect x="86" y="95" width="86" height="3" rx="1.5" fill="#FFFBEB" opacity=".75"/>
+    <rect x="128" y="104" width="11" height="24" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="145" y="104" width="11" height="34" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="162" y="104" width="11" height="18" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="74" y="86" width="10" height="28" rx="3" fill="url(#aigoBrass)"/>
+    <circle cx="48" cy="100" r="27" fill="none" stroke="url(#aigoBrass)" stroke-width="13"/>
+    <circle cx="48" cy="100" r="33" fill="none" stroke="#FFF4C2" stroke-width="1.2" opacity=".55"/>
+    <circle cx="48" cy="100" r="10" fill="url(#aigoKeyGem)" stroke="#FFF4C2" stroke-width="2"/>
+  </g>
+  <path d="M150 41 L151.75 46.25 L157 48 L151.75 49.75 L150 55 L148.25 49.75 L143 48 L148.25 46.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M42 145 L43.25 148.75 L47 150 L43.25 151.25 L42 155 L40.75 151.25 L37 150 L40.75 148.75 Z" fill="#FFFFFF" opacity="0.7"/><path d="M166 146 L167.0 149.0 L170 150 L167.0 151.0 L166 154 L165.0 151.0 L162 150 L165.0 149.0 Z" fill="#FFFFFF" opacity="0.6"/>
+</svg>
+            </div>
+            <div style="position: relative; margin-top: 3.0px; background: #FFFFFF; border-radius: 6px; padding: 3.9px 4.3px 3.5px; display: flex; flex-direction: column; gap: 1.7px">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 4.1px; letter-spacing: .14em; text-transform: uppercase; color: #566072">The Clear Ask</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 7.4px; line-height: 1.1; color: #172033">Three-Tooth Key</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 5.0px; color: #566072">Learn · ~10 min</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-style: italic; font-size: 5.2px; color: #172033">“Ask once.”</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.9px"><span style="font-size: 6px; letter-spacing: 2px; line-height: 1; white-space: nowrap"><span style="color: #E2A300">★</span><span style="color: #C9C1B0">☆</span><span style="color: #C9C1B0">☆</span></span><span style="position: absolute; left: -9999px">1 of 3 stars</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 4.3px; letter-spacing: .12em; color: #475569">● COMMON</span></div>
+            </div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: linear-gradient(165deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 32%)"></div>
+            
+            
+          </div></sc-if>
+            <sc-if value="{{passed}}" hint-placeholder-val="{{ false }}"><div role="img" aria-label="LEARN card: Three-Tooth Key, common, 2 of 3 stars" style="position: relative; flex: none; width: 104px; height: 146px; border-radius: 10px; padding: 3.5px; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 12px 26px rgba(14,26,51,.20)">
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(150deg, #60A5FA 0%, #2563EB 45%, #1E3A8A 100%)"></div>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 4.8px; letter-spacing: .14em; color: #FFFFFF; padding: 0.9px 1.7px 2.6px"><span>■ LEARN</span><span>S01 · 1/3</span></div>
+            <div style="position: relative; flex: 1 1 0; border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, rgba(96,165,250,0.55) 0%, #0E1A33 68%); display: flex; align-items: center; justify-content: center">
+              <div aria-hidden="true" class="v4-twinkle" style="position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 75% 20%, #BAE6FD 50%, transparent 51%), radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 30% 75%, #F5D0FE 50%, transparent 51%)"></div>
+              <svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><linearGradient id="aigoBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".3" stop-color="#F8C65A"/><stop offset=".68" stop-color="#C9841C"/><stop offset="1" stop-color="#6E400C"/></linearGradient><radialGradient id="aigoKeyGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#BFDBFE" stop-opacity=".7"/><stop offset="1" stop-color="#60A5FA" stop-opacity="0"/></radialGradient>
+  <radialGradient id="aigoKeyGem" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#E0F2FE"/><stop offset=".45" stop-color="#60A5FA"/><stop offset="1" stop-color="#1E3A8A"/></radialGradient></defs>
+  <circle cx="100" cy="100" r="84" fill="url(#aigoKeyGlow)"/>
+  <g transform="rotate(-38 100 100)">
+    <rect x="80" y="93" width="96" height="14" rx="5" fill="url(#aigoBrass)"/>
+    <rect x="86" y="95" width="86" height="3" rx="1.5" fill="#FFFBEB" opacity=".75"/>
+    <rect x="128" y="104" width="11" height="24" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="145" y="104" width="11" height="34" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="162" y="104" width="11" height="18" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="74" y="86" width="10" height="28" rx="3" fill="url(#aigoBrass)"/>
+    <circle cx="48" cy="100" r="27" fill="none" stroke="url(#aigoBrass)" stroke-width="13"/>
+    <circle cx="48" cy="100" r="33" fill="none" stroke="#FFF4C2" stroke-width="1.2" opacity=".55"/>
+    <circle cx="48" cy="100" r="10" fill="url(#aigoKeyGem)" stroke="#FFF4C2" stroke-width="2"/>
+  </g>
+  <path d="M150 41 L151.75 46.25 L157 48 L151.75 49.75 L150 55 L148.25 49.75 L143 48 L148.25 46.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M42 145 L43.25 148.75 L47 150 L43.25 151.25 L42 155 L40.75 151.25 L37 150 L40.75 148.75 Z" fill="#FFFFFF" opacity="0.7"/><path d="M166 146 L167.0 149.0 L170 150 L167.0 151.0 L166 154 L165.0 151.0 L162 150 L165.0 149.0 Z" fill="#FFFFFF" opacity="0.6"/>
+</svg>
+            </div>
+            <div style="position: relative; margin-top: 3.0px; background: #FFFFFF; border-radius: 6px; padding: 3.9px 4.3px 3.5px; display: flex; flex-direction: column; gap: 1.7px">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 4.1px; letter-spacing: .14em; text-transform: uppercase; color: #566072">The Clear Ask</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 7.4px; line-height: 1.1; color: #172033">Three-Tooth Key</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 5.0px; color: #566072">Learn · ~10 min</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-style: italic; font-size: 5.2px; color: #172033">“Ask once.”</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.9px"><span style="font-size: 6px; letter-spacing: 2px; line-height: 1; white-space: nowrap"><span style="color: #E2A300">★</span><span style="color: #E2A300">★</span><span style="color: #C9C1B0">☆</span></span><span style="position: absolute; left: -9999px">2 of 3 stars</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 4.3px; letter-spacing: .12em; color: #475569">● COMMON</span></div>
+            </div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: linear-gradient(165deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 32%)"></div>
+            
+            
+          </div></sc-if>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 24px; line-height: 1">Three-Tooth Key</div>
+            <div style="font-size: 13px; color: #566072">Set 01 · The Clear Ask</div>
+            <div><span style="font-size: 20px; letter-spacing: 2px"><span style="color: #E2A300">★</span><span style="color: {{s2}}">★</span><span style="color: #C9C1B0">★</span></span> <span style="font-size: 13px; color: #566072">{{starsText}}</span></div>
+            <sc-if value="{{passed}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px"><div role="img" aria-label="Stamp earned: Explicit format, easy" style="flex: none; width: 64px; height: 64px; border-radius: 50%; border: 3px solid #15803D; box-sizing: border-box; padding: 4px; transform: rotate(-8deg); opacity: .92">
+          <div style="width: 100%; height: 100%; border-radius: 50%; border: 1.5px solid #15803D; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; color: #15803D; background: repeating-radial-gradient(circle at 30% 30%, rgba(255,255,255,0) 0 3px, rgba(255,255,255,.18) 3px 4px)">
+            
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 7.1px; line-height: 1.05; text-transform: uppercase; padding: 0 4px">Explicit format</span>
+            
+          </div>
+        </div><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .1em; color: #15803D">NEW STAMP</span></div></sc-if>
+          </div>
+        </div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #DCD4C4; border-top: 4px solid #2563EB; padding: 18px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .18em; color: #2563EB">NOT SURE WHAT TO WRITE?</div>
+        <p style="margin: 8px 0 10px; font-size: 14px; color: #566072; line-height: 1.5">An answer you can use as is. Claude still checks it for real.</p>
+        <p style="margin: 0 0 12px; font-size: 14px; line-height: 1.55; background: #F4F0E8; padding: 12px; font-family: 'IBM Plex Mono', monospace">Turn these notes into an update for our team chat. Format: 3 bullet points, each with an owner and a deadline. Length: under 60 words. Start with the one decision we made: standup moves to 9:30.</p>
+        <div style="display: flex; gap: 8px">
+          <button onClick="{{useHint}}" style="cursor: pointer; border: 0; background: #172033; color: #FFFFFF; padding: 11px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)">USE THIS ANSWER</button>
+          <button style="cursor: pointer; border: 1.5px solid #DCD4C4; background: #FFFFFF; color: #172033; padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em">COPY</button>
+        </div>
+        <div style="margin-top: 14px; border-top: 1px dashed #DCD4C4; padding-top: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.9">
+          <div style="letter-spacing: .14em; color: #566072">PASSES IF IT SAYS</div>
+          <div>[ ] the format: list, table, email…</div><div>[ ] how long it should be</div><div>[ ] what comes first</div>
+        </div>
+      </div>
+      <a href="V4Guide.dc.html" style="text-decoration: none; display: block; border: 1.5px dashed #2563EB; padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .08em; color: #1D4ED8; line-height: 1.6">PREFER YOUR OWN CLAUDE? ↗<br><span style="color: #566072; letter-spacing: 0">Same item, same lesson. The guide shows how in 3 steps.</span></a>
+    </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { draft: '', stage: 0, lastSent: '' }; }
+  componentWillUnmount() { clearTimeout(this.t); }
+  renderVals() {
+    const self = this; const st = this.state || {};
+    const hint = "Turn these notes into an update for our team chat. Format: 3 bullet points, each with an owner and a deadline. Length: under 60 words. Start with the one decision we made: standup moves to 9:30.";
+    const passed = st.stage === 2;
+    return {
+      draft: st.draft || '', lastSent: st.lastSent || '', sent: st.stage >= 1, checking: st.stage === 1, passed, notPassed: !passed,
+      s2: passed ? '#E2A300' : '#C9C1B0', starsText: passed ? '2 of 3 stars' : '1 of 3 stars',
+      type: (e) => self.setState({ draft: e.target.value }),
+      useHint: () => self.setState({ draft: hint }),
+      send: (e) => { e.preventDefault(); if (!st.draft || st.stage > 0) return; self.setState({ stage: 1, lastSent: st.draft, draft: '' }); self.t = setTimeout(() => self.setState({ stage: 2 }), 1500); }
+    };
+  }
+}
+</script>
+</body>
+</html>

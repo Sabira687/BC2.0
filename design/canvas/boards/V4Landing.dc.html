@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AIGO Collection</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Montserrat:wght@600;700;800&amp;family=Open+Sans:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#050611}
+a{color:#EEF2FF}a:hover{color:#6AF7FF}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;height:100%}
+.glitch::before{color:#FF5AF1;transform:translate(-4px,0);clip-path:inset(0 0 62% 0);animation:aigoG1 3.1s infinite steps(1);mix-blend-mode:screen}
+.glitch::after{color:#00FFD1;transform:translate(4px,0);clip-path:inset(58% 0 0 0);animation:aigoG2 2.7s infinite steps(1);mix-blend-mode:screen}
+@keyframes aigoG1{0%{clip-path:inset(0 0 62% 0)}20%{clip-path:inset(30% 0 40% 0);transform:translate(-6px,0)}40%{clip-path:inset(70% 0 5% 0)}60%{clip-path:inset(10% 0 80% 0);transform:translate(-2px,0)}80%{clip-path:inset(45% 0 30% 0)}}
+@keyframes aigoG2{0%{clip-path:inset(58% 0 0 0)}25%{clip-path:inset(5% 0 75% 0);transform:translate(6px,0)}50%{clip-path:inset(80% 0 2% 0)}75%{clip-path:inset(35% 0 45% 0);transform:translate(2px,0)}}
+@keyframes aigoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes aigoShimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes aigoBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes aigoDash{to{stroke-dashoffset:-160}}
+@keyframes aigoBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes v4Sheen{0%{background-position:0% 50%}100%{background-position:250% 50%}}
+@keyframes v4Twinkle{0%,100%{opacity:.35}50%{opacity:.9}}
+.aigo-float{animation:aigoFloat 4.2s ease-in-out infinite}
+.aigo-holo{background:linear-gradient(120deg,#6AF7FF,#FF8AD9,#3B82FF,#00FFD1,#6AF7FF);background-size:200% 200%;animation:aigoShimmer 5s linear infinite}
+.aigo-blink{animation:aigoBlink 1s infinite}
+.aigo-bounce{animation:aigoBounce 1.6s ease-in-out infinite}
+.v4-holo{background-size:250% 250%;animation:v4Sheen 4.5s linear infinite}
+.v4-twinkle{animation:v4Twinkle 3s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.glitch::before,.glitch::after,.aigo-float,.aigo-holo,.aigo-blink,.aigo-bounce,.v4-holo,.v4-twinkle{animation:none}}
+</style>
+</helmet>
+<div style="background: #050611; color: #EEF2FF; font-family: 'IBM Plex Sans', system-ui, sans-serif; overflow: hidden">
+
+  <section onMouseMove="{{move}}" style="position: relative; min-height: 760px; display: flex; flex-direction: column; background-color: #050611; background-image: radial-gradient(1px 1px at 22px 34px, rgba(238,242,255,.45) 50%, transparent 51%), radial-gradient(1px 1px at 150px 96px, rgba(106,247,255,.4) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 96px 170px, rgba(238,242,255,.35) 50%, transparent 51%), radial-gradient(1px 1px at 270px 222px, rgba(255,138,217,.35) 50%, transparent 51%); background-size: 190px 190px, 250px 250px, 340px 340px, 430px 430px; overflow: hidden">
+    <div aria-hidden="true" style="position: absolute; left: {{glowX}}px; top: {{glowY}}px; width: 360px; height: 360px; pointer-events: none; opacity: {{glowO}}; background-image: radial-gradient(1.5px 1.5px at 22px 34px, #EEF2FF 50%, transparent 51%), radial-gradient(1.5px 1.5px at 150px 96px, #6AF7FF 50%, transparent 51%), radial-gradient(2px 2px at 96px 170px, #EEF2FF 50%, transparent 51%), radial-gradient(1.5px 1.5px at 270px 222px, #FF8AD9 50%, transparent 51%); background-size: 190px 190px, 250px 250px, 340px 340px, 430px 430px; background-position: {{bgX}}px {{bgY}}px; -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 70%); mask-image: radial-gradient(circle, #000 0%, transparent 70%)"></div>
+    <sc-for list="{{trail}}" as="d" hint-placeholder-count="0">
+      <div aria-hidden="true" style="position: absolute; left: {{d.x}}px; top: {{d.y}}px; width: {{d.s}}px; height: {{d.s}}px; background: {{d.c}}; opacity: {{d.o}}; pointer-events: none; transform: translate(-50%, -50%) rotate(45deg)"></div>
+    </sc-for>
+    <header style="position: relative; max-width: 1240px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 22px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px">
+      <span style="display: flex; align-items: baseline; gap: 12px"><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 30px; letter-spacing: .18em">AIGO</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .3em; color: #6AF7FF">COLLECTION</span></span>
+      <nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .14em; text-transform: uppercase">
+        <a href="#idea" style="text-decoration: none">Idea</a><a href="#vault" style="text-decoration: none">Items</a><a href="#path" style="text-decoration: none">Path</a><a href="#plans" style="text-decoration: none">Plans</a><a href="#roadmap" style="text-decoration: none">Roadmap</a>
+      </nav>
+    </header>
+    <div style="position: relative; flex: 1; max-width: 1240px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 40px 24px 0; display: flex; flex-direction: column; justify-content: center">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em; color: #6AF7FF">&gt; COLLECTIBLE CARDS THAT TURN YOUR AI INTO YOUR COACH<span class="aigo-blink">_</span></div>
+      <h1 style="margin: 22px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(72px, 12vw, 184px); line-height: .82; letter-spacing: -.01em">
+        <span class="glitch" data-text="Collect.">Collect.</span><br>
+        <span style="color: transparent; -webkit-text-stroke: 2px #EEF2FF">Learn.</span><br>
+        <span style="color: #3B82FF">Level up.</span>
+      </h1>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px; margin-top: 44px">
+        <a href="V4Start.dc.html" style="text-decoration: none; display: inline-block; background: #3B82FF; color: #050611; padding: 20px 40px; font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 16px; letter-spacing: .16em; text-transform: uppercase; clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)">Start your collection ▸</a>
+        <p style="margin: 0; max-width: 430px; color: #B8C0D9; line-height: 1.55">Every card is a digital item with its own story. Paste it into Claude and the AI becomes your coach for one skill, on your real work. Stars and stamps come only when Claude checks what you did.</p>
+      </div>
+    </div>
+    <div style="position: relative; max-width: 1240px; width: 100%; box-sizing: border-box; margin: 48px auto 0; padding: 0 24px">
+      <div style="border: 1px solid #1E2A3D; background: rgba(5,6,17,.82); display: flex; flex-wrap: wrap">
+        <a href="V4Collection.dc.html" style="text-decoration: none; flex: 1 1 200px; padding: 16px 20px; border-right: 1px solid #1E2A3D; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .16em; color: #6AF7FF">QUICK DEMO · 3 MIN ▸<br><span style="color: #8A97AD">sample player John is ready</span></a>
+        <div style="flex: 1 1 180px; padding: 16px 20px; border-right: 1px solid #1E2A3D"><span style="font-family: 'IBM Plex Mono', monospace; color: #3B82FF">01</span> Open Set 01: your first 3 cards</div><div style="flex: 1 1 180px; padding: 16px 20px; border-right: 1px solid #1E2A3D"><span style="font-family: 'IBM Plex Mono', monospace; color: #3B82FF">02</span> Paste the Key, pass a lesson</div><div style="flex: 1 1 180px; padding: 16px 20px; border-right: 1px solid #1E2A3D"><span style="font-family: 'IBM Plex Mono', monospace; color: #3B82FF">03</span> Use the Compass in Work chat</div><div style="flex: 1 1 180px; padding: 16px 20px; "><span style="font-family: 'IBM Plex Mono', monospace; color: #3B82FF">04</span> Fast-forward John: holo + badge</div>
+      </div>
+    </div>
+    <a href="#idea" style="position: relative; align-self: center; margin: 40px 0 28px; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em; color: #B8C0D9">LEARN MORE
+      <span class="aigo-bounce" aria-hidden="true" style="display: block; width: 18px; height: 18px; border-right: 2px solid #6AF7FF; border-bottom: 2px solid #6AF7FF; transform: rotate(45deg)"></span></a>
+  </section>
+
+  <section id="idea" style="background: #3B82FF; color: #050611; clip-path: polygon(0 9%, 100% 0, 100% 91%, 0 100%); margin-top: -40px; position: relative">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 130px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center">
+      <div aria-hidden="true" style="flex: 1 1 200px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 160px; line-height: .8; color: transparent; -webkit-text-stroke: 2px #050611">01</div>
+      <div style="flex: 3 1 520px">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em">THE IDEA</div>
+        <h2 style="margin: 14px 0 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(44px, 5.4vw, 76px); line-height: .88">The best teacher<br>for the AI is the AI.</h2>
+        <p style="margin: 0 0 18px; max-width: 620px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: .06em">BUILT FOR: people who know AI matters and don't know where to start.</p>
+        <p style="margin: 0; max-width: 640px; font-size: 19px; line-height: 1.55">AIGO is a collection of digital items. Each card has a story and a power: the Key teaches, the Lock tests, the Compass helps you mid-task. Paste a card into the AIGO lesson or into your own Claude, and the AI becomes your coach for that skill. Collect the set, earn the stamps, keep every card.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="vault" style="background: radial-gradient(ellipse at 50% 70%, #2A0A55 0%, #1B0036 45%, #050611 100%); padding: 110px 24px 120px; margin-top: -30px">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+      <div style="flex: 1 1 360px; max-width: 460px">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em; color: #FF8AD9">02 / THE VAULT</div>
+        <h2 style="margin: 14px 0 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(44px, 5.4vw, 76px); line-height: .88">Every item<br><span class="aigo-holo" style="-webkit-background-clip: text; background-clip: text; color: transparent">has a story.</span></h2>
+        <p style="margin: 0 0 26px; color: #D9CFF0; line-height: 1.6; font-size: 17px">A card is not a lesson file. It's an item: its own art, a short story that helps the skill stick, a rarity and a number in its set. Inside sit hidden instructions only your AI reads.</p>
+        <div style="border: 1px solid {{panel.accent}}; background: rgba(5,6,17,.55); padding: 22px; min-height: 178px">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .16em; color: {{panel.accent}}">{{panel.tag}}</div>
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 32px; margin-top: 6px">{{panel.name}}</div>
+          <div style="color: #E6DDF7; font-style: italic; line-height: 1.55; margin-top: 6px">{{panel.lore}}</div>
+          <div style="color: #B9AED4; line-height: 1.5; margin-top: 10px; font-size: 15px">{{panel.teach}}</div>
+        </div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .14em; color: #9E8FC0; margin-top: 12px">HOVER AN ITEM TO INSPECT IT</div>
+      </div>
+      <div style="flex: 1 1 660px; position: relative; height: 500px; display: flex; justify-content: center">
+        <div aria-hidden="true" style="position: absolute; bottom: 120px; left: 50%; width: 640px; height: 360px; transform: translateX(-50%); background: linear-gradient(0deg, rgba(106,247,255,.28), rgba(255,138,217,.06) 70%, transparent); clip-path: polygon(14% 100%, 86% 100%, 100% 0, 0 0)"></div>
+        <div style="position: absolute; top: 140px; left: 0; right: 0; display: flex; justify-content: center; align-items: flex-end; gap: 12px"><button onMouseEnter="{{pick0}}" onFocus="{{pick0}}" onClick="{{pick0}}" aria-label="Inspect item 1" class="aigo-float" style="animation-delay: 0.0s; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 12px; opacity: {{op0}}; outline: 2px solid {{rim0}}; outline-offset: 4px; transition: opacity .3s"><div role="img" aria-label="LEARN card: Three-Tooth Key, common, 0 of 3 stars" style="position: relative; flex: none; width: 128px; height: 179px; border-radius: 10px; padding: 4.3px; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 12px 26px rgba(14,26,51,.20)">
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(150deg, #60A5FA 0%, #2563EB 45%, #1E3A8A 100%)"></div>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 5.9px; letter-spacing: .14em; color: #FFFFFF; padding: 1.1px 2.1px 3.2px"><span>■ LEARN</span><span>S01 · 1/3</span></div>
+            <div style="position: relative; flex: 1 1 0; border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, rgba(96,165,250,0.55) 0%, #0E1A33 68%); display: flex; align-items: center; justify-content: center">
+              <div aria-hidden="true" class="v4-twinkle" style="position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 75% 20%, #BAE6FD 50%, transparent 51%), radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 30% 75%, #F5D0FE 50%, transparent 51%)"></div>
+              <svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><linearGradient id="aigoBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".3" stop-color="#F8C65A"/><stop offset=".68" stop-color="#C9841C"/><stop offset="1" stop-color="#6E400C"/></linearGradient><radialGradient id="aigoKeyGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#BFDBFE" stop-opacity=".7"/><stop offset="1" stop-color="#60A5FA" stop-opacity="0"/></radialGradient>
+  <radialGradient id="aigoKeyGem" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#E0F2FE"/><stop offset=".45" stop-color="#60A5FA"/><stop offset="1" stop-color="#1E3A8A"/></radialGradient></defs>
+  <circle cx="100" cy="100" r="84" fill="url(#aigoKeyGlow)"/>
+  <g transform="rotate(-38 100 100)">
+    <rect x="80" y="93" width="96" height="14" rx="5" fill="url(#aigoBrass)"/>
+    <rect x="86" y="95" width="86" height="3" rx="1.5" fill="#FFFBEB" opacity=".75"/>
+    <rect x="128" y="104" width="11" height="24" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="145" y="104" width="11" height="34" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="162" y="104" width="11" height="18" rx="2" fill="url(#aigoBrass)"/>
+    <rect x="74" y="86" width="10" height="28" rx="3" fill="url(#aigoBrass)"/>
+    <circle cx="48" cy="100" r="27" fill="none" stroke="url(#aigoBrass)" stroke-width="13"/>
+    <circle cx="48" cy="100" r="33" fill="none" stroke="#FFF4C2" stroke-width="1.2" opacity=".55"/>
+    <circle cx="48" cy="100" r="10" fill="url(#aigoKeyGem)" stroke="#FFF4C2" stroke-width="2"/>
+  </g>
+  <path d="M150 41 L151.75 46.25 L157 48 L151.75 49.75 L150 55 L148.25 49.75 L143 48 L148.25 46.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M42 145 L43.25 148.75 L47 150 L43.25 151.25 L42 155 L40.75 151.25 L37 150 L40.75 148.75 Z" fill="#FFFFFF" opacity="0.7"/><path d="M166 146 L167.0 149.0 L170 150 L167.0 151.0 L166 154 L165.0 151.0 L162 150 L165.0 149.0 Z" fill="#FFFFFF" opacity="0.6"/>
+</svg>
+            </div>
+            <div style="position: relative; margin-top: 3.7px; background: #FFFFFF; border-radius: 6px; padding: 4.8px 5.3px 4.3px; display: flex; flex-direction: column; gap: 2.1px">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 5.1px; letter-spacing: .14em; text-transform: uppercase; color: #566072">The Clear Ask</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 9.1px; line-height: 1.1; color: #172033">Three-Tooth Key</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 6.1px; color: #566072">Learn · 3 lessons</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-style: italic; font-size: 6.4px; color: #172033">“Ask once.”</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.1px"><span style="font-size: 8px; letter-spacing: 2px; line-height: 1; white-space: nowrap"><span style="color: #C9C1B0">☆</span><span style="color: #C9C1B0">☆</span><span style="color: #C9C1B0">☆</span></span><span style="position: absolute; left: -9999px">0 of 3 stars</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 5.3px; letter-spacing: .12em; color: #475569">● COMMON</span></div>
+            </div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: linear-gradient(165deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 32%)"></div>
+            
+            
+          </div></button><button onMouseEnter="{{pick1}}" onFocus="{{pick1}}" onClick="{{pick1}}" aria-label="Inspect item 2" class="aigo-float" style="animation-delay: 0.6s; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 12px; opacity: {{op1}}; outline: 2px solid {{rim1}}; outline-offset: 4px; transition: opacity .3s"><div role="img" aria-label="TEST card: Proving Lock, common, 0 of 3 stars" style="position: relative; flex: none; width: 128px; height: 179px; border-radius: 10px; padding: 4.3px; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 12px 26px rgba(14,26,51,.20)">
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(150deg, #E879F9 0%, #A21CAF 45%, #581C87 100%)"></div>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 5.9px; letter-spacing: .14em; color: #FFFFFF; padding: 1.1px 2.1px 3.2px"><span>▲ TEST</span><span>S01 · 2/3</span></div>
+            <div style="position: relative; flex: 1 1 0; border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, rgba(232,121,249,0.5) 0%, #0E1A33 68%); display: flex; align-items: center; justify-content: center">
+              <div aria-hidden="true" class="v4-twinkle" style="position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 75% 20%, #BAE6FD 50%, transparent 51%), radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 30% 75%, #F5D0FE 50%, transparent 51%)"></div>
+              <svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><radialGradient id="aigoLockGlow" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#F5D0FE" stop-opacity=".7"/><stop offset="1" stop-color="#E879F9" stop-opacity="0"/></radialGradient>
+  <linearGradient id="aigoSilver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#CBD5E1"/><stop offset="1" stop-color="#64748B"/></linearGradient>
+  <linearGradient id="aigoLockBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FAE8FF"/><stop offset=".3" stop-color="#E879F9"/><stop offset=".7" stop-color="#A21CAF"/><stop offset="1" stop-color="#4A044E"/></linearGradient></defs>
+  <circle cx="100" cy="112" r="86" fill="url(#aigoLockGlow)"/>
+  <path d="M64 98 V70 a36 36 0 0 1 72 0 V98" fill="none" stroke="url(#aigoSilver)" stroke-width="15" stroke-linecap="round"/>
+  <rect x="42" y="88" width="116" height="94" rx="18" fill="url(#aigoLockBody)"/>
+  <rect x="49" y="95" width="102" height="80" rx="13" fill="none" stroke="#FFFFFF" stroke-opacity=".45" stroke-width="2"/>
+  <circle cx="100" cy="136" r="38" fill="#3B0764" opacity=".35"/>
+  <circle cx="100.0" cy="107.0" r="5" fill="#FDE68A"/><rect x="98.0" y="109.0" width="4" height="8" rx="1" fill="#FDE68A"/><circle cx="125.7" cy="125.7" r="5" fill="#2E1065"/><rect x="123.7" y="127.7" width="4" height="8" rx="1" fill="#2E1065"/><circle cx="115.9" cy="155.8" r="5" fill="#2E1065"/><rect x="113.9" y="157.8" width="4" height="8" rx="1" fill="#2E1065"/><circle cx="84.1" cy="155.8" r="5" fill="#2E1065"/><rect x="82.1" y="157.8" width="4" height="8" rx="1" fill="#2E1065"/><circle cx="74.3" cy="125.7" r="5" fill="#2E1065"/><rect x="72.3" y="127.7" width="4" height="8" rx="1" fill="#2E1065"/>
+  <circle cx="56" cy="102" r="3.5" fill="#FAE8FF"/><circle cx="144" cy="102" r="3.5" fill="#FAE8FF"/><circle cx="56" cy="168" r="3.5" fill="#FAE8FF"/><circle cx="144" cy="168" r="3.5" fill="#FAE8FF"/>
+  <path d="M160 39 L161.75 44.25 L167 46 L161.75 47.75 L160 53 L158.25 47.75 L153 46 L158.25 44.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M36 59 L37.25 62.75 L41 64 L37.25 65.25 L36 69 L34.75 65.25 L31 64 L34.75 62.75 Z" fill="#FFFFFF" opacity="0.7"/>
+</svg>
+            </div>
+            <div style="position: relative; margin-top: 3.7px; background: #FFFFFF; border-radius: 6px; padding: 4.8px 5.3px 4.3px; display: flex; flex-direction: column; gap: 2.1px">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 5.1px; letter-spacing: .14em; text-transform: uppercase; color: #566072">The Clear Ask</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 9.1px; line-height: 1.1; color: #172033">Proving Lock</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 6.1px; color: #566072">Test · 5 tasks</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-style: italic; font-size: 6.4px; color: #172033">“Prove it.”</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.1px"><span style="font-size: 8px; letter-spacing: 2px; line-height: 1; white-space: nowrap"><span style="color: #C9C1B0">☆</span><span style="color: #C9C1B0">☆</span><span style="color: #C9C1B0">☆</span></span><span style="position: absolute; left: -9999px">0 of 3 stars</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 5.3px; letter-spacing: .12em; color: #475569">● COMMON</span></div>
+            </div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: linear-gradient(165deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 32%)"></div>
+            
+            
+          </div></button><button onMouseEnter="{{pick2}}" onFocus="{{pick2}}" onClick="{{pick2}}" aria-label="Inspect item 3" class="aigo-float" style="animation-delay: 1.2s; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 12px; opacity: {{op2}}; outline: 2px solid {{rim2}}; outline-offset: 4px; transition: opacity .3s"><div role="img" aria-label="HELP card: Pocket Compass, common, 0 of 3 stars" style="position: relative; flex: none; width: 128px; height: 179px; border-radius: 10px; padding: 4.3px; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 12px 26px rgba(14,26,51,.20)">
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(150deg, #4ADE80 0%, #15803D 45%, #14532D 100%)"></div>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 5.9px; letter-spacing: .14em; color: #FFFFFF; padding: 1.1px 2.1px 3.2px"><span>● HELP</span><span>S01 · 3/3</span></div>
+            <div style="position: relative; flex: 1 1 0; border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, rgba(74,222,128,0.45) 0%, #0E1A33 68%); display: flex; align-items: center; justify-content: center">
+              <div aria-hidden="true" class="v4-twinkle" style="position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 75% 20%, #BAE6FD 50%, transparent 51%), radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 30% 75%, #F5D0FE 50%, transparent 51%)"></div>
+              <svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><linearGradient id="aigoBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".3" stop-color="#F8C65A"/><stop offset=".68" stop-color="#C9841C"/><stop offset="1" stop-color="#6E400C"/></linearGradient><radialGradient id="aigoCompGlow" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#BBF7D0" stop-opacity=".65"/><stop offset="1" stop-color="#4ADE80" stop-opacity="0"/></radialGradient>
+  <radialGradient id="aigoCompFace" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#166534"/><stop offset="1" stop-color="#052E16"/></radialGradient>
+  <linearGradient id="aigoNeedle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0FDF4"/><stop offset="1" stop-color="#22C55E"/></linearGradient></defs>
+  <circle cx="100" cy="108" r="86" fill="url(#aigoCompGlow)"/>
+  <circle cx="100" cy="30" r="10" fill="none" stroke="url(#aigoBrass)" stroke-width="5"/>
+  <circle cx="100" cy="108" r="68" fill="url(#aigoBrass)"/>
+  <circle cx="100" cy="108" r="58" fill="url(#aigoCompFace)"/>
+  <line x1="100.0" y1="64.0" x2="100.0" y2="55.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="118.4" y1="63.7" x2="120.3" y2="59.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="133.9" y1="74.1" x2="137.5" y2="70.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="144.3" y1="89.6" x2="149.0" y2="87.7" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="144.0" y1="108.0" x2="153.0" y2="108.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="144.3" y1="126.4" x2="149.0" y2="128.3" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="133.9" y1="141.9" x2="137.5" y2="145.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="118.4" y1="152.3" x2="120.3" y2="157.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="100.0" y1="152.0" x2="100.0" y2="161.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="81.6" y1="152.3" x2="79.7" y2="157.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="66.1" y1="141.9" x2="62.5" y2="145.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="55.7" y1="126.4" x2="51.0" y2="128.3" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="56.0" y1="108.0" x2="47.0" y2="108.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="55.7" y1="89.6" x2="51.0" y2="87.7" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="66.1" y1="74.1" x2="62.5" y2="70.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="81.6" y1="63.7" x2="79.7" y2="59.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/>
+  <text x="100" y="72" text-anchor="middle" font-family="Montserrat, sans-serif" font-weight="800" font-size="12" fill="#F0FDF4">N</text>
+  <g transform="rotate(32 100 108)">
+    <path d="M100 62 L110 108 L90 108 Z" fill="url(#aigoNeedle)"/>
+    <path d="M100 154 L110 108 L90 108 Z" fill="#CBD5E1" opacity=".85"/>
+  </g>
+  <circle cx="100" cy="108" r="7" fill="url(#aigoBrass)" stroke="#FFF4C2" stroke-width="1.5"/>
+  <path d="M62 82 A46 46 0 0 1 98 60" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>
+  <path d="M162 45 L163.75 50.25 L169 52 L163.75 53.75 L162 59 L160.25 53.75 L155 52 L160.25 50.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M40 155 L41.25 158.75 L45 160 L41.25 161.25 L40 165 L38.75 161.25 L35 160 L38.75 158.75 Z" fill="#FFFFFF" opacity="0.7"/>
+</svg>
+            </div>
+            <div style="position: relative; margin-top: 3.7px; background: #FFFFFF; border-radius: 6px; padding: 4.8px 5.3px 4.3px; display: flex; flex-direction: column; gap: 2.1px">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 5.1px; letter-spacing: .14em; text-transform: uppercase; color: #566072">The Clear Ask</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 9.1px; line-height: 1.1; color: #172033">Pocket Compass</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 6.1px; color: #566072">Help · ~1 min</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-style: italic; font-size: 6.4px; color: #172033">“One move.”</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.1px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 5.3px; color: #566072; letter-spacing: .1em">TOOL · NO STARS</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 5.3px; letter-spacing: .12em; color: #475569">● COMMON</span></div>
+            </div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: linear-gradient(165deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 32%)"></div>
+            
+            
+          </div></button><button onMouseEnter="{{pick3}}" onFocus="{{pick3}}" onClick="{{pick3}}" aria-label="Inspect item 4" class="aigo-float" style="animation-delay: 1.7999999999999998s; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 12px; opacity: {{op3}}; outline: 2px solid {{rim3}}; outline-offset: 4px; transition: opacity .3s"><div role="img" aria-label="Locked card, rare: Free · after the demo" style="position: relative; flex: none; width: 108px; height: 151px; border-radius: 10px; box-sizing: border-box; background-color: #0E1A33; background-image: radial-gradient(1px 1px at 18px 26px, rgba(255,255,255,.6) 50%, transparent 51%), radial-gradient(1px 1px at 120px 80px, rgba(186,230,253,.55) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 70px 140px, rgba(255,255,255,.45) 50%, transparent 51%); background-size: 160px 160px, 210px 210px, 290px 290px; border: 1px solid #0E7490; box-shadow: 0 0 0 2px rgba(103,232,249,.35), 0 0 26px rgba(34,211,238,.35), 0 10px 24px rgba(14,26,51,.22); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4.5px; overflow: hidden">
+            <div aria-hidden="true" style="width: 37.8px; height: 43.2px; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: linear-gradient(160deg, #155E75, #0B2A3A); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 17.1px; color: #67E8F9">?</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 5.0px; letter-spacing: .2em; color: #67E8F9">??? · S05</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 4.7px; letter-spacing: .16em; color: #67E8F9">◆ RARE</div>
+            <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 5.4px; color: #8FA3C8; text-align: center; padding: 0 4.5px">Free · after the demo</div>
+          </div></button><button onMouseEnter="{{pick4}}" onFocus="{{pick4}}" onClick="{{pick4}}" aria-label="Inspect item 5" class="aigo-float" style="animation-delay: 2.4s; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 12px; opacity: {{op4}}; outline: 2px solid {{rim4}}; outline-offset: 4px; transition: opacity .3s"><div role="img" aria-label="Locked card, legendary: Premium" style="position: relative; flex: none; width: 108px; height: 151px; border-radius: 10px; box-sizing: border-box; background-color: #0E1A33; background-image: radial-gradient(1px 1px at 18px 26px, rgba(255,255,255,.6) 50%, transparent 51%), radial-gradient(1px 1px at 120px 80px, rgba(186,230,253,.55) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 70px 140px, rgba(255,255,255,.45) 50%, transparent 51%); background-size: 160px 160px, 210px 210px, 290px 290px; border: 1px solid #B45309; box-shadow: 0 0 0 2px rgba(252,211,77,.45), 0 0 30px rgba(245,158,11,.45), 0 10px 24px rgba(14,26,51,.22); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4.5px; overflow: hidden">
+            <div aria-hidden="true" style="width: 37.8px; height: 43.2px; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: linear-gradient(160deg, #92400E, #3B1A06); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 17.1px; color: #FCD34D">?</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 5.0px; letter-spacing: .2em; color: #FCD34D">??? · S12</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 4.7px; letter-spacing: .16em; color: #FCD34D">★ LEGENDARY</div>
+            <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 5.4px; color: #8FA3C8; text-align: center; padding: 0 4.5px">Premium</div>
+          </div></button></div>
+        <div aria-hidden="true" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 640px; height: 90px; background: #0E0420; border: 1px solid #5B2E8F; clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%)"></div>
+        <div aria-hidden="true" style="position: absolute; bottom: 124px; left: 50%; transform: translateX(-50%); width: 660px; height: 14px; background: #5B2E8F"></div>
+        <div aria-hidden="true" style="position: absolute; bottom: 64px; left: 50%; transform: translateX(-50%); font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .3em; color: #FF8AD9; white-space: nowrap">AIGO · SET 01 · THE CLEAR ASK</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="path" style="background: #050611; border-top: 1px solid #12324A; padding: 100px 24px 110px">
+    <div style="max-width: 1240px; margin: 0 auto">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 20px">
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em; color: #00FFD1">03 / THE PATH</div><h2 style="margin: 14px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(44px, 5.4vw, 76px); line-height: .88">How the AI<br>teaches you</h2></div>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .16em; color: #7FA7B8">HOVER A POINT ON THE PATH</span>
+      </div>
+      <div style="overflow-x: auto; margin-top: 30px">
+        <div onMouseLeave="{{unlock}}" style="position: relative; min-width: 900px; aspect-ratio: 1000 / 440">
+          <svg viewBox="0 0 1000 440" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%">
+            <path d="M120 320 C 200 320, 235 130, 315 130 S 420 300, 500 300 S 605 140, 685 140 S 800 260, 880 260" fill="none" stroke="#12324A" stroke-width="10"></path>
+            <path d="M120 320 C 200 320, 235 130, 315 130 S 420 300, 500 300 S 605 140, 685 140 S 800 260, 880 260" pathLength="100" fill="none" stroke="#00FFD1" stroke-opacity=".35" stroke-width="10" stroke-dasharray="{{pathFill}} 100" style="transition: stroke-dasharray .9s ease"></path>
+            <path d="M120 320 C 200 320, 235 130, 315 130 S 420 300, 500 300 S 605 140, 685 140 S 800 260, 880 260" fill="none" stroke="#00FFD1" stroke-width="2" stroke-dasharray="6 10" style="animation: aigoDash 4s linear infinite"></path>
+          </svg>
+          <sc-for list="{{stops}}" as="s" hint-placeholder-count="5">
+            <div style="position: absolute; left: {{s.left}}; top: {{s.top}}; transform: translate(-50%, -50%)">
+              <button onMouseEnter="{{s.pick}}" onFocus="{{s.pick}}" onClick="{{s.pick}}" aria-label="{{s.title}}" style="width: 46px; height: 46px; border-radius: 50%; border: 2px solid #00FFD1; background: {{s.bg}}; color: {{s.fg}}; font-family: 'IBM Plex Mono', monospace; font-size: 14px; cursor: pointer">{{s.n}}</button>
+            </div>
+          </sc-for>
+          <sc-for list="{{stops}}" as="s" hint-placeholder-count="5">
+            <div style="position: absolute; left: {{s.left}}; top: {{s.boxTop}}; transform: translateX(-50%); width: 196px; box-sizing: border-box; border: 1px solid {{s.border}}; transition: border-color .4s; background: #07121C; padding: 12px 14px">
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 21px; text-transform: uppercase; color: #EEF2FF">{{s.title}}</div>
+              <div style="margin-top: 6px; font-size: 14px; line-height: 1.45; color: {{s.textColor}}; font-family: {{s.font}}">{{s.shown}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #020403; padding: 100px 24px; border-top: 1px solid #0F3B22">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+      <div style="flex: 1 1 300px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em; color: #39FF88">04 / WHAT YOU GET</div><h2 style="margin: 14px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(44px, 5.4vw, 76px); line-height: .88">Not a course.<br><span style="color: #39FF88">A skill you can show.</span></h2></div>
+      <div style="flex: 2 1 520px; background: #000; border: 1px solid #1F6B40">
+        <div style="padding: 10px 16px; border-bottom: 1px solid #1F6B40; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #39FF88; display: flex; justify-content: space-between"><span>john@aigo-vault:~</span><span>[ ■ ▲ ● ]</span></div>
+        <div style="padding: 22px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; line-height: 1.9; color: #B6FFD3">
+          <div><span style="color: #39FF88">$</span> aigo --benefits</div>
+          <div><span style="color: #39FF88">[+]</span> every card is an item: its own art, story, rarity and number</div><div><span style="color: #39FF88">[+]</span> lessons on your real work: emails, reports, meeting notes</div><div><span style="color: #39FF88">[+]</span> stars and stamps only when Claude checks what you did</div><div><span style="color: #39FF88">[+]</span> a stamp book that reads like a list of what you can do</div><div><span style="color: #39FF88">[+]</span> help mid-task: one better move, then back to work</div><div><span style="color: #39FF88">[+]</span> starts in your browser, then works in your own Claude</div><div><span style="color: #39FF88">[+]</span> nothing expires: no streaks, no timers, no lectures</div>
+          <div><span style="color: #39FF88">$</span> <span class="aigo-blink" style="display: inline-block; width: 10px; height: 18px; background: #39FF88; vertical-align: middle"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: radial-gradient(ellipse at 15% 30%, #3A0A2E 0%, #12030F 55%, #050611 100%); padding: 100px 24px; border-top: 1px solid #3A1236">
+    <div style="max-width: 1240px; margin: 0 auto">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em; color: #FF8AD9">05 / THE GOOD PARTS ONLY</div>
+      <h2 style="margin: 14px 0 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(44px, 5.4vw, 76px); line-height: .88">We kept the magic.<br><span style="color: #FF8AD9">We left the guilt.</span></h2>
+      <p style="margin: 0 0 40px; max-width: 680px; color: #E5CFE0; font-size: 17px; line-height: 1.6">We grew up collecting, and some of us learned real skills while we did it. Neopets taught a generation HTML. AIGO takes the parts of old games that felt like magic and points them at the skill that matters at work now.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+        <div style="flex: 2 1 560px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px"><div style="border: 1px solid #5B1F52; background: rgba(255,138,217,.06); padding: 16px 18px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #FF8AD9">KEPT · POKÉMON TCG, HEARTHSTONE</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 24px; text-transform: uppercase; margin-top: 4px">Pack openings</div><div style="color: #E5CFE0; font-size: 15px; margin-top: 2px">A card reveal, with nothing random</div></div><div style="border: 1px solid #5B1F52; background: rgba(255,138,217,.06); padding: 16px 18px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #FF8AD9">KEPT · HEARTHSTONE GOLDEN CARDS</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 24px; text-transform: uppercase; margin-top: 4px">Holo foils</div><div style="color: #E5CFE0; font-size: 15px; margin-top: 2px">Earned for mastery: 90+ on the test</div></div><div style="border: 1px solid #5B1F52; background: rgba(255,138,217,.06); padding: 16px 18px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #FF8AD9">KEPT · TRADING CARDS</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 24px; text-transform: uppercase; margin-top: 4px">Rarity and set numbers</div><div style="color: #E5CFE0; font-size: 15px; margin-top: 2px">● ◆ ★ show how deep a skill goes</div></div><div style="border: 1px solid #5B1F52; background: rgba(255,138,217,.06); padding: 16px 18px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #FF8AD9">KEPT · CLUB PENGUIN</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 24px; text-transform: uppercase; margin-top: 4px">Stamp books</div><div style="color: #E5CFE0; font-size: 15px; margin-top: 2px">Each stamp is a skill you used</div></div><div style="border: 1px solid #5B1F52; background: rgba(255,138,217,.06); padding: 16px 18px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #FF8AD9">KEPT · WEBKINZ, CHEAT CODES</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 24px; text-transform: uppercase; margin-top: 4px">Secret codes</div><div style="color: #E5CFE0; font-size: 15px; margin-top: 2px">Result codes bring progress home</div></div><div style="border: 1px solid #5B1F52; background: rgba(255,138,217,.06); padding: 16px 18px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #FF8AD9">KEPT · POKÉDEX</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 24px; text-transform: uppercase; margin-top: 4px">“???” silhouettes</div><div style="color: #E5CFE0; font-size: 15px; margin-top: 2px">You see what's ahead</div></div></div>
+        <div style="flex: 1 1 280px; border: 1px dashed #5B1F52; padding: 20px 22px">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #9E7A97">LEFT BEHIND</div>
+          <ul style="list-style: none; margin: 10px 0 0; padding: 0"><li style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 26px; color: #8C6E86; text-decoration: line-through; text-decoration-color: #FF8AD9; padding: 4px 0">Streaks and daily guilt</li><li style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 26px; color: #8C6E86; text-decoration: line-through; text-decoration-color: #FF8AD9; padding: 4px 0">Random loot boxes</li><li style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 26px; color: #8C6E86; text-decoration: line-through; text-decoration-color: #FF8AD9; padding: 4px 0">Timers and energy</li><li style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 26px; color: #8C6E86; text-decoration: line-through; text-decoration-color: #FF8AD9; padding: 4px 0">Leaderboards</li><li style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 26px; color: #8C6E86; text-decoration: line-through; text-decoration-color: #FF8AD9; padding: 4px 0">In-app coins</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="plans" style="background: radial-gradient(ellipse at 80% 20%, #0B1A3A 0%, #050611 60%); padding: 100px 24px; border-top: 1px solid #1E2A3D">
+    <div style="max-width: 1240px; margin: 0 auto">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 48px">
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em; color: #6AF7FF">06 / PLANS</div><h2 style="margin: 14px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(44px, 5.4vw, 76px); line-height: .88">Start free.<br>Go further for less than a lunch.</h2></div>
+        <div style="max-width: 420px; border: 1px solid #1E2A3D; background: rgba(5,6,17,.6); padding: 16px 18px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #B8C0D9"><span style="color: #6AF7FF; letter-spacing: .16em">IN THIS DEMO</span><br>Set 01 of the Free plan: 3 cards, the AIGO lesson, Work chat, stars, stamps and result codes. Premium checkout runs in test mode.</div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; align-items: stretch">
+        <div style="position: relative; flex: 1 1 400px; max-width: 520px; transform: rotate(1.2deg)">
+          <div aria-hidden="true" style="position: absolute; inset: 12px -12px -12px 12px; border: 1px solid #3B82FF"></div>
+          <div style="position: relative; display: flex; background: #EEF2FF; color: #050611; height: 100%">
+            <div aria-hidden="true" style="width: 22px; flex: none; background: #3B82FF"></div>
+            <div style="flex: 1; padding: 26px 26px 22px; border-right: 2px dashed #9AA6C4">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em">AIGO · FREE</div>
+              <div style="display: flex; align-items: flex-end; gap: 8px; margin-top: 10px"><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 80px; line-height: .8">$0</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; padding-bottom: 6px">/ FOREVER</span></div>
+              <ul style="list-style: none; margin: 18px 0 0; padding: 0; font-size: 15px; line-height: 1.55"><li style="padding: 4px 0">▸ <b>Core path:</b> 7 skills, 21 cards</li><li style="padding: 4px 0">▸ Lessons in AIGO and in your own Claude</li><li style="padding: 4px 0">▸ Stars, stamp book, set badges, holo cards</li><li style="padding: 4px 0">▸ Result codes from your own Claude</li><li style="padding: 4px 0">▸ Cards updated when Claude changes</li></ul>
+            </div>
+            <div style="width: 60px; flex: none; display: flex; align-items: center; justify-content: center"><span style="writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .3em">FREE FOREVER</span></div>
+          </div>
+        </div>
+        <div style="position: relative; flex: 1 1 400px; max-width: 520px; transform: rotate(-1.6deg)">
+          <div aria-hidden="true" style="position: absolute; inset: 12px -12px -12px 12px; border: 1px solid #FF8AD9"></div>
+          <div style="position: relative; display: flex; background: #EEF2FF; color: #050611; height: 100%">
+            <div class="aigo-holo" aria-hidden="true" style="width: 22px; flex: none"></div>
+            <div style="flex: 1; padding: 26px 26px 22px; border-right: 2px dashed #9AA6C4">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em">AIGO · PREMIUM</div>
+              <div style="display: flex; align-items: flex-end; gap: 8px; margin-top: 10px"><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 80px; line-height: .8">$7</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; padding-bottom: 6px">/ MONTH</span></div>
+              <ul style="list-style: none; margin: 18px 0 0; padding: 0; font-size: 15px; line-height: 1.55"><li style="padding: 4px 0">▸ Everything in Free</li><li style="padding: 4px 0">▸ <b>AIGO Connector</b> for Claude: your collection inside Claude, progress saves itself</li><li style="padding: 4px 0">▸ <b>Full path:</b> Power user and Automator, 24 more ★ Legendary cards</li><li style="padding: 4px 0">▸ <b>New cards every month</b>, after each Claude release</li><li style="padding: 4px 0">▸ <b>Promotion Kit:</b> your proven skills on one page for your manager</li><li style="padding: 4px 0">▸ Priority support</li></ul>
+            </div>
+            <div style="width: 60px; flex: none; display: flex; align-items: center; justify-content: center"><span style="writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .3em">CANCEL ANYTIME</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: center; margin-top: 44px">
+        <a href="V4Start.dc.html" style="text-decoration: none; display: inline-block; background: #3B82FF; color: #050611; padding: 16px 30px; font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)">Start free ▸</a>
+        <a href="V4Pass.dc.html" style="text-decoration: none; border: 1px solid #FF8AD9; color: #FFD6F7; padding: 15px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: .16em">SEE PREMIUM</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap" style="background: #050611; padding: 100px 24px; border-top: 1px solid #1E2A3D">
+    <div style="max-width: 1240px; margin: 0 auto">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .2em; color: #6AF7FF">07 / ROADMAP</div>
+      <h2 style="margin: 14px 0 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(44px, 5.4vw, 76px); line-height: .88">Big plan.<br><span style="color: #3B82FF">Real parts.</span></h2>
+      <p style="margin: 0 0 40px; max-width: 680px; color: #B8C0D9; font-size: 17px; line-height: 1.6">The demo is the core of the whole product, working today. Everything after it reuses the same parts.</p>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid #1E2A3D"><div style="padding: 26px 24px; border-right: 1px solid #1E2A3D; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 12px"><span style="width: 14px; height: 14px; transform: rotate(45deg); background: #6AF7FF; box-shadow: 0 0 14px #6AF7FF;"></span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em; color: #6AF7FF">NOW</span></div>
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 34px">This demo</div>
+          <ul style="list-style: none; margin: 0; padding: 0; font-size: 15px; line-height: 1.75; color: #D5DBEC"><li>▸ Set 01: Key, Lock, Compass</li><li>▸ AIGO lesson on the Claude API</li><li>▸ Work chat with the Help card</li><li>▸ Stars, stamps, result codes</li><li>▸ Premium checkout in test mode</li></ul>
+          <div style="margin-top: auto; border-top: 1px dashed #1E2A3D; padding-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.6; color: #8A97AD"><span style="color: #6AF7FF; letter-spacing: .14em">WHY IT'S REAL ·</span> Live today. Try it as John.</div>
+        </div><div style="padding: 26px 24px; border-right: 1px solid #1E2A3D; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 12px"><span style="width: 14px; height: 14px; transform: rotate(45deg); background: #3B82FF; "></span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em; color: #3B82FF">NEXT</span></div>
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 34px">Free at launch</div>
+          <ul style="list-style: none; margin: 0; padding: 0; font-size: 15px; line-height: 1.75; color: #D5DBEC"><li>▸ Sets 02–07: the core path</li><li>▸ 21 cards with their own art and stories</li><li>▸ Card updates when Claude changes</li></ul>
+          <div style="margin-top: auto; border-top: 1px dashed #1E2A3D; padding-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.6; color: #8A97AD"><span style="color: #3B82FF; letter-spacing: .14em">WHY IT'S REAL ·</span> Same lesson and test templates. New sets are writing, not new code.</div>
+        </div><div style="padding: 26px 24px;  display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 12px"><span style="width: 14px; height: 14px; transform: rotate(45deg); background: #FF8AD9; "></span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em; color: #FF8AD9">THEN</span></div>
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 34px">Premium</div>
+          <ul style="list-style: none; margin: 0; padding: 0; font-size: 15px; line-height: 1.75; color: #D5DBEC"><li>▸ AIGO Connector for Claude</li><li>▸ Power user and Automator paths</li><li>▸ Monthly card drops</li><li>▸ Promotion Kit, priority support</li></ul>
+          <div style="margin-top: auto; border-top: 1px dashed #1E2A3D; padding-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.6; color: #8A97AD"><span style="color: #FF8AD9; letter-spacing: .14em">WHY IT'S REAL ·</span> The connector is an MCP server: Claude already supports custom connectors, even on the free plan. The Kit exports data AIGO already stores.</div>
+        </div></div>
+    </div>
+  </section>
+
+  <section id="contacts" style="background-color: #050611; background-image: radial-gradient(1px 1px at 40px 60px, rgba(238,242,255,.4) 50%, transparent 51%), radial-gradient(1px 1px at 180px 20px, rgba(106,247,255,.4) 50%, transparent 51%); background-size: 220px 120px, 300px 140px; padding: 90px 24px 40px; border-top: 1px solid #1E2A3D">
+    <div style="max-width: 1240px; margin: 0 auto">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px; border-bottom: 1px solid #1E2A3D; padding-bottom: 48px">
+        <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(56px, 8vw, 120px); line-height: .85">It's not<br><span style="color: #3B82FF">too late.</span></h2>
+        <a href="V4Start.dc.html" style="text-decoration: none; display: inline-block; background: #3B82FF; color: #050611; padding: 20px 40px; font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 16px; letter-spacing: .16em; text-transform: uppercase; clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)">Start your collection ▸</a>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px 64px; padding: 36px 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px"><div><div style="font-size: 11px; letter-spacing: .2em; color: #8A97AD">EMAIL</div><div style="margin-top: 6px">[EMAIL]</div></div><div><div style="font-size: 11px; letter-spacing: .2em; color: #8A97AD">TELEGRAM</div><div style="margin-top: 6px">[@HANDLE]</div></div><div><div style="font-size: 11px; letter-spacing: .2em; color: #8A97AD">GITHUB</div><div style="margin-top: 6px">[REPO LINK]</div></div><div><div style="font-size: 11px; letter-spacing: .2em; color: #8A97AD">TEAM</div><div style="margin-top: 6px">SKaiCode</div></div></div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .16em; color: #8A97AD">AIGO COLLECTION · 2026 · YOUR CARDS WAIT FOR YOU</div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":7050}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { trail: [], gx: -999, gy: -999, item: 0, stop: 0, lock: false }; this.seq = 0; }
+  componentDidMount() {
+    this.timer = setInterval(() => { const t = this.state.trail || []; if (t.length) this.setState({ trail: t.slice(1) }); }, 60);
+    this.pathTimer = setInterval(() => { if (!this.state.lock) this.setState({ stop: ((this.state.stop || 0) + 1) % 5 }); }, 2400);
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearInterval(this.pathTimer); }
+  renderVals() {
+    const self = this; const st = this.state || {}; const trail = st.trail || [];
+    const colors = ['#6AF7FF', '#FF8AD9', '#EEF2FF', '#00FFD1'];
+    const move = (e) => {
+      const r = e.currentTarget.getBoundingClientRect(); const x = Math.round(e.clientX - r.left); const y = Math.round(e.clientY - r.top);
+      const last = trail[trail.length - 1];
+      if (last && Math.abs(last.x - x) + Math.abs(last.y - y) < 14) { self.setState({ gx: x, gy: y }); return; }
+      self.seq += 1;
+      const next = trail.concat([{ x: x + Math.round(Math.random() * 10 - 5), y: y + Math.round(Math.random() * 10 - 5), c: colors[self.seq % 4] }]).slice(-16);
+      self.setState({ trail: next, gx: x, gy: y });
+    };
+    const panels = [{"accent": "#6AF7FF", "tag": "ITEM \u00b7 LEARN \u00b7 SET 01 \u00b7 1/3 \u00b7 \u25cf COMMON", "name": "Three-Tooth Key", "lore": "Forged for doors that never open on the first knock. Its three teeth are who you are, what you need and how it should look. Miss one and the lock just spins.", "teach": "Teaches: write an ask the AI gets right the first time. 3 lessons on your work, ~10 min."}, {"accent": "#FF5AF1", "tag": "ITEM \u00b7 TEST \u00b7 SET 01 \u00b7 2/3 \u00b7 \u25cf COMMON", "name": "Proving Lock", "lore": "Five keyholes, no hints. It doesn't care how you learned, only whether your key is cut right.", "teach": "Tests: 5 tasks on your work, scored out of 100. 90 or more turns the card holographic."}, {"accent": "#39FF88", "tag": "ITEM \u00b7 HELP \u00b7 SET 01 \u00b7 3/3 \u00b7 \u25cf COMMON", "name": "Pocket Compass", "lore": "It won't walk the road for you. Lost mid-task? It points once, toward one better move, then goes quiet.", "teach": "Helps: paste it mid-task and get one better move. About a minute."}, {"accent": "#67E8F9", "tag": "ITEM \u00b7 ??? \u00b7 SET 05 \u00b7 \u25c6 RARE \u00b7 FREE", "name": "Locked item", "lore": "You'll see it later.", "teach": "Comes with the free core path after the demo."}, {"accent": "#FCD34D", "tag": "ITEM \u00b7 ??? \u00b7 SET 12 \u00b7 \u2605 LEGENDARY \u00b7 PREMIUM", "name": "Locked item", "lore": "You'll see it later.", "teach": "Part of the Automator path: Claude Code, agents and connectors."}];
+    const stopsData = [["01", "You answer", "One minute: your job, your goal, how you like to learn.", 120, 320], ["02", "Open your cards", "Set 01 is made for you: the Key, the Lock and the Compass, each revealed in its pocket.", 315, 130], ["03", "Activate", "Paste a card into the AIGO lesson or your own Claude. It answers \u25b6 ITEM ACTIVATED and becomes your coach.", 500, 300], ["04", "Learn on real work", "Short lessons with your emails and reports. A star or a stamp only when Claude checks the result.", 685, 140], ["05", "Prove it", "The Lock: five tasks on your work. 90+ makes the card holographic; a result code brings it home.", 880, 260]];
+    const item = st.item || 0;
+    const stops = stopsData.map((s, i) => {
+      const on = st.stop === i, done = i < (st.stop || 0), below = s[4] < 220;
+      return { n: s[0], title: s[1], left: (s[3] / 10) + '%', top: (s[4] / 4.4) + '%',
+        boxTop: below ? ((s[4] + 40) / 4.4) + '%' : ((s[4] - 180) / 4.4) + '%',
+        bg: on ? '#00FFD1' : (done ? '#0B3B3A' : '#050611'), fg: on ? '#050611' : '#00FFD1', border: on ? '#00FFD1' : '#12324A',
+        shown: on ? s[2] : '▒▒▒▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒▒▒', textColor: on ? '#BFEFF0' : '#2C5868',
+        font: on ? "'IBM Plex Sans', sans-serif" : "'IBM Plex Mono', monospace",
+        pick: () => self.setState({ stop: i, lock: true }) };
+    });
+    const v = { move, glowX: st.gx - 180, glowY: st.gy - 180, glowO: st.gx < -100 ? 0 : 1, bgX: 180 - st.gx, bgY: 180 - st.gy,
+      trail: trail.map((d, i) => ({ x: d.x, y: d.y, c: d.c, s: 3 + Math.round(i / 3), o: ((i + 1) / trail.length).toFixed(2) })),
+      panel: panels[item], stops, pathFill: (st.stop || 0) * 25, unlock: () => self.setState({ lock: false }) };
+    for (let i = 0; i < 5; i++) { v['pick' + i] = () => self.setState({ item: i }); v['op' + i] = item === i ? 1 : (i > 2 ? 0.55 : 0.75); v['rim' + i] = item === i ? panels[i].accent : 'transparent'; }
+    return v;
+  }
+}
+</script>
+</body>
+</html>

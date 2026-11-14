@@ -1,0 +1,240 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>V4WorkChat.dc.html</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;family=Caveat:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F0E8}
+a{color:#1D4ED8}a:hover{color:#172033}
+@keyframes v4Sheen{0%{background-position:0% 50%}100%{background-position:250% 50%}}
+@keyframes v4Twinkle{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes v4Glow{0%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}40%{box-shadow:0 0 0 6px rgba(37,99,235,.28)}100%{box-shadow:0 0 0 0 rgba(37,99,235,.0)}}
+@keyframes v4Spin{to{transform:rotate(360deg)}}
+.v4-holo{background-size:250% 250%;animation:v4Sheen 4.5s linear infinite}
+.v4-twinkle{animation:v4Twinkle 3s ease-in-out infinite}
+@keyframes v5Float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes v5Blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.v5-lift{transition:transform .22s ease, box-shadow .22s ease, filter .22s ease}
+.v5-lift:hover,.v5-lift:focus-visible{transform:translateY(-12px) rotate(-1.5deg);filter:drop-shadow(0 18px 18px rgba(14,26,51,.28))}
+.v5-float{animation:v5Float 4.2s ease-in-out infinite}
+.v5-blink{animation:v5Blink 1s infinite}
+a:focus-visible,button:focus-visible{outline:2px solid #3B82FF;outline-offset:3px}
+@media (prefers-reduced-motion: reduce){.v4-holo,.v4-twinkle,.v5-float,.v5-blink{animation:none}.v5-lift:hover{transform:none}}
+</style>
+
+
+<script>
+class DCLogic { constructor(p){ this.props=p||{}; this.state={}; } setState(p){ this.state=Object.assign({}, this.state, typeof p==='function'?p(this.state):p); window.__render(); } }
+window.addEventListener('DOMContentLoaded', () => {
+  const tpl = document.getElementById('tpl'); const root = document.getElementById('root');
+  const comp = new Component({});
+  const val = (expr, v) => { expr = expr.trim(); if (expr==='true') return true; if (expr==='false') return false; return expr.split('.').reduce((o, k) => (o == null ? undefined : o[k]), v); };
+  const expandFor = (box, v) => {
+    let el; let n = 0;
+    while ((el = box.querySelector('sc-for'))) {
+      const m = /\{\{(.*?)\}\}/.exec(el.getAttribute('list') || ''); const list = (m ? val(m[1], v) : []) || [];
+      const alias = el.getAttribute('as') || 'item'; const frag = document.createDocumentFragment();
+      list.forEach((it) => {
+        const holder = document.createElement('div'); holder.innerHTML = el.innerHTML;
+        const sub = (str) => str.replace(new RegExp('\\{\\{\\s*' + alias + '\\.([a-zA-Z0-9_]+)\\s*\\}\\}', 'g'), (_, k) => {
+          const x = it[k]; if (typeof x === 'function') { const key = '__fn' + (n++); v[key] = x; return '{{' + key + '}}'; } return String(x ?? ''); });
+        const w = document.createTreeWalker(holder, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT); let q;
+        while ((q = w.nextNode())) { if (q.nodeType === 3) { q.nodeValue = sub(q.nodeValue); } else { [...q.attributes].forEach(a => q.setAttribute(a.name, sub(a.value))); } }
+        frag.append(...holder.childNodes);
+      });
+      el.replaceWith(frag);
+    }
+  };
+  window.__render = () => {
+    const v = comp.renderVals ? comp.renderVals() : {};
+    const box = document.createElement('div'); box.appendChild(tpl.content.cloneNode(true)); expandFor(box, v);
+    box.querySelectorAll('sc-if').forEach(el => {
+      if (!box.contains(el)) return;
+      const m = /\{\{(.*?)\}\}/.exec(el.getAttribute('value') || ''); const ok = m ? val(m[1], v) : false;
+      if (!ok) el.remove(); else el.replaceWith(...el.childNodes);
+    });
+    const walker = document.createTreeWalker(box, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    const els = []; let n; while ((n = walker.nextNode())) els.push(n);
+    els.forEach(node => {
+      if (node.nodeType === 3) { if (node.nodeValue.includes('{{')) node.nodeValue = node.nodeValue.replace(/\{\{(.*?)\}\}/g, (_, k) => String(val(k, v) ?? '')); return; }
+      [...node.attributes].forEach(a => {
+        if (!a.value.includes('{{')) return;
+        if (a.name.startsWith('on')) {
+          const fn = val(/\{\{(.*?)\}\}/.exec(a.value)[1], v); node.removeAttribute(a.name);
+          const ev = { onclick: 'click', onchange: 'input', onsubmit: 'submit' }[a.name] || a.name.slice(2);
+          if (typeof fn === 'function') node.addEventListener(ev, fn);
+          return;
+        }
+        const out = a.value.replace(/\{\{(.*?)\}\}/g, (_, k) => String(val(k, v) ?? ''));
+        if (a.name === 'value' && (node.tagName === 'TEXTAREA' || node.tagName === 'INPUT')) { node.removeAttribute('value'); node.value = out; }
+        else node.setAttribute(a.name, out);
+      });
+    });
+    root.replaceChildren(...box.childNodes);
+  };
+  window.__render(); if (comp.componentDidMount) comp.componentDidMount();
+});
+</script><script>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { loaded: false, helped: false }; }
+  renderVals() {
+    const self = this; const st = this.state || {};
+    return {
+      empty: !st.loaded && !st.helped, loaded: !!st.loaded, helped: !!st.helped,
+      noop: (e) => e.preventDefault(),
+      load: () => self.setState({ loaded: true }),
+      help: () => self.setState({ helped: true }),
+      step1: st.loaded ? '✓' : ' ', step2: st.helped ? '✓' : ' ',
+      composerBorder: st.helped ? '#4ADE80' : '#2B3B5E'
+    };
+  }
+}
+</script></head><body><template id="tpl">
+
+<div style="background: #F4F0E8; color: #172033; font-family: 'IBM Plex Sans', sans-serif; min-height: 100vh">
+<header style="background-color: #0E1A33; background-image: radial-gradient(1px 1px at 18px 26px, rgba(255,255,255,.6) 50%, transparent 51%), radial-gradient(1px 1px at 120px 80px, rgba(186,230,253,.55) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 70px 140px, rgba(255,255,255,.45) 50%, transparent 51%); background-size: 160px 160px, 210px 210px, 290px 290px; ">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 34px">
+      <a href="V4Landing.dc.html" aria-label="AIGO Collection home" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px"><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 26px; letter-spacing: .18em; color: #FFFFFF">AIGO</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .3em; color: #6AF7FF">COLLECTION</span></a>
+      <nav aria-label="App" style="display: flex; flex-wrap: wrap; gap: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase"><a href="V4Collection.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Collection</a><a href="V4Console.dc.html" aria-current="page" style="text-decoration: none; color: #FFFFFF; border-bottom: 2px solid #6AF7FF; padding: 6px 0">Console</a><a href="V4Guide.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Guide</a><a href="V4Progress.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Progress</a><a href="V4Pass.dc.html" style="text-decoration: none; color: #9FB0CF; border-bottom: 2px solid transparent; padding: 6px 0">Premium</a></nav>
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .12em">
+        <span style="background: #FDE68A; color: #172033; padding: 5px 8px">DEMO · SAMPLE PLAYER</span>
+        <span style="border: 1px solid #3B4D74; color: #E2E8F0; padding: 5px 8px">JOHN · MENTOR</span>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 1360px; margin: 0 auto; padding: 18px 24px 28px">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px">
+      <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em; color: #566072">02 / CONSOLE · WORK CHAT</div><h1 style="margin: 6px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 44px; line-height: .9">A normal chat, a compass in your pocket</h1></div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #566072; letter-spacing: .08em">When it isn't going well, use your Help item.</div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+      <section aria-label="AIGO console" style="flex: 999 1 680px; min-width: 0; background: #0B1020; border: 1px solid #1E2A3D; box-shadow: 0 20px 40px rgba(5,6,17,.25); display: flex; flex-direction: column">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 10px 14px; border-bottom: 1px solid #1E2A3D">
+        <span aria-hidden="true" style="display: flex; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #FF5F57"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #FEBC2E"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #28C840"></span></span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C8BAA">john@aigo-console:~ · claude</span>
+        <nav aria-label="Console mode" style="display: flex; gap: 6px; margin-left: 8px"><a href="V4Console.dc.html" style="text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .14em; padding: 6px 12px; color: #9FB0CF; background: transparent; border: 1px solid #2B3B5E">LESSON</a><a href="V4WorkChat.dc.html" aria-current="page" style="text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .14em; padding: 6px 12px; color: #050611; background: #6AF7FF; border: 1px solid #6AF7FF">WORK CHAT</a></nav>
+        <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .14em; color: #39FF88">● CLAUDE · LIVE</span>
+      </div>
+      <div aria-live="polite" style="height: 690px; overflow-y: auto; display: flex; flex-direction: column-reverse"><div style="flex: none; min-height: 100%; box-sizing: border-box; padding: 22px 22px 14px; display: flex; flex-direction: column; gap: 20px">
+        <sc-if value="{{empty}}" hint-placeholder-val="{{ true }}"><div style="margin: auto; text-align: center; color: #7C8BAA; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.7">work chat is empty<br>type a real task, or load a sample chat →</div></sc-if>
+<sc-if value="{{loaded}}" hint-placeholder-val="{{ false }}"><div style="align-self: center; background: #FDE68A; color: #172033; padding: 3px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .14em">SAMPLE CHAT · DEMO DATA</div><div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6AF7FF; flex: none; width: 72px">john ›</span><div style="flex: 1; min-width: 0"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #FFFFFF">write me a report</div></div></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><pre style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #D5DBEC; white-space: pre-wrap; word-break: break-word"><span style="color: #D5DBEC;">Sure! Here's a report on recent business performance…  </span><span style="color: #7C8BAA;">(long and generic)</span></pre></div></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6AF7FF; flex: none; width: 72px">john ›</span><div style="flex: 1; min-width: 0"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #FFFFFF">no, shorter</div></div></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><pre style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #D5DBEC; white-space: pre-wrap; word-break: break-word"><span style="color: #D5DBEC;">Here's a shorter version…  </span><span style="color: #7C8BAA;">(still generic)</span></pre></div></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6AF7FF; flex: none; width: 72px">john ›</span><div style="flex: 1; min-width: 0"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #FFFFFF">no, more formal</div></div></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><pre style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #D5DBEC; white-space: pre-wrap; word-break: break-word"><span style="color: #D5DBEC;">Certainly. Here is a more formal version…  </span><span style="color: #7C8BAA;">(still not what John needs)</span></pre></div></div></sc-if>
+<sc-if value="{{helped}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6AF7FF; flex: none; width: 72px">john ›</span><div style="flex: 1; min-width: 0"><div style="display: inline-flex; gap: 14px; align-items: center; border: 1px solid #4ADE80; background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,0)); padding: 10px 16px 10px 10px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)">
+            <div style="width: 64px; height: 64px; flex: none; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #4ADE8055 0%, #0E1A33 70%); border-radius: 6px"><svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><linearGradient id="aigoBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".3" stop-color="#F8C65A"/><stop offset=".68" stop-color="#C9841C"/><stop offset="1" stop-color="#6E400C"/></linearGradient><radialGradient id="aigoCompGlow" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#BBF7D0" stop-opacity=".65"/><stop offset="1" stop-color="#4ADE80" stop-opacity="0"/></radialGradient>
+  <radialGradient id="aigoCompFace" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#166534"/><stop offset="1" stop-color="#052E16"/></radialGradient>
+  <linearGradient id="aigoNeedle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0FDF4"/><stop offset="1" stop-color="#22C55E"/></linearGradient></defs>
+  <circle cx="100" cy="108" r="86" fill="url(#aigoCompGlow)"/>
+  <circle cx="100" cy="30" r="10" fill="none" stroke="url(#aigoBrass)" stroke-width="5"/>
+  <circle cx="100" cy="108" r="68" fill="url(#aigoBrass)"/>
+  <circle cx="100" cy="108" r="58" fill="url(#aigoCompFace)"/>
+  <line x1="100.0" y1="64.0" x2="100.0" y2="55.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="118.4" y1="63.7" x2="120.3" y2="59.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="133.9" y1="74.1" x2="137.5" y2="70.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="144.3" y1="89.6" x2="149.0" y2="87.7" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="144.0" y1="108.0" x2="153.0" y2="108.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="144.3" y1="126.4" x2="149.0" y2="128.3" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="133.9" y1="141.9" x2="137.5" y2="145.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="118.4" y1="152.3" x2="120.3" y2="157.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="100.0" y1="152.0" x2="100.0" y2="161.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="81.6" y1="152.3" x2="79.7" y2="157.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="66.1" y1="141.9" x2="62.5" y2="145.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="55.7" y1="126.4" x2="51.0" y2="128.3" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="56.0" y1="108.0" x2="47.0" y2="108.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="55.7" y1="89.6" x2="51.0" y2="87.7" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="66.1" y1="74.1" x2="62.5" y2="70.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="81.6" y1="63.7" x2="79.7" y2="59.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/>
+  <text x="100" y="72" text-anchor="middle" font-family="Montserrat, sans-serif" font-weight="800" font-size="12" fill="#F0FDF4">N</text>
+  <g transform="rotate(32 100 108)">
+    <path d="M100 62 L110 108 L90 108 Z" fill="url(#aigoNeedle)"/>
+    <path d="M100 154 L110 108 L90 108 Z" fill="#CBD5E1" opacity=".85"/>
+  </g>
+  <circle cx="100" cy="108" r="7" fill="url(#aigoBrass)" stroke="#FFF4C2" stroke-width="1.5"/>
+  <path d="M62 82 A46 46 0 0 1 98 60" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>
+  <path d="M162 45 L163.75 50.25 L169 52 L163.75 53.75 L162 59 L160.25 53.75 L155 52 L160.25 50.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M40 155 L41.25 158.75 L45 160 L41.25 161.25 L40 165 L38.75 161.25 L35 160 L38.75 158.75 Z" fill="#FFFFFF" opacity="0.7"/>
+</svg></div>
+            <div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .16em; color: #4ADE80">● HELP · SET 01 · ● COMMON</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 24px; color: #FFFFFF; line-height: 1.05">Pocket Compass</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #7C8BAA">item pasted · hidden instructions inside · <u>view</u></div>
+            </div>
+          </div></div></div><div style="display: flex; gap: 10px; align-items: flex-start"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FF8AD9; flex: none; width: 72px">claude ›</span><div style="flex: 1; min-width: 0"><pre style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; color: #D5DBEC; white-space: pre-wrap; word-break: break-word"><span style="color: #4ADE80; font-weight: 600;">▶ ITEM ACTIVATED · HELP · Pocket Compass</span>
+
+<span style="color: #4ADE80;">┌─ ONE BETTER MOVE ─────────────────────────────────────</span>
+<span style="color: #4ADE80;">│ </span><span style="color: #D5DBEC;">You asked three times and still don't have the report.</span>
+<span style="color: #4ADE80;">│ </span><span style="color: #D5DBEC;">Say it once, with all three parts:</span>
+<span style="color: #4ADE80;">│ </span><span style="color: #FFFFFF; font-weight: 600;">  who it's for</span><span style="color: #7C8BAA;"> · </span><span style="color: #FFFFFF; font-weight: 600;">what it covers</span><span style="color: #7C8BAA;"> · </span><span style="color: #FFFFFF; font-weight: 600;">how it should look</span>
+<span style="color: #4ADE80;">└───────────────────────────────────────────────────────</span>
+
+<span style="color: #4ADE80;">┌─ TRY THIS ────────────────────────────────────────────</span>
+<span style="color: #4ADE80;">│ </span><span style="color: #D5DBEC;">I'm the office manager. Write my weekly report for my</span>
+<span style="color: #4ADE80;">│ </span><span style="color: #D5DBEC;">manager: supplies ordered, upcoming events, open issues.</span>
+<span style="color: #4ADE80;">│ </span><span style="color: #D5DBEC;">Format: under 150 words, three short sections, neutral tone.</span>
+<span style="color: #4ADE80;">└───────────────────────────────────────────────────────</span>
+
+<span style="color: #86EFAC; font-weight: 600;">HELP USED</span><span style="color: #7C8BAA;"> · back to normal chat</span></pre></div></div></sc-if>
+      </div></div>
+      <form onSubmit="{{noop}}" style="border-top: 1px solid #1E2A3D; padding: 12px 14px 14px">
+        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px; border: 1px solid #4ADE80; color: #4ADE80; padding: 4px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .1em; box-shadow: 0 0 14px #4ADE8055">● POCKET COMPASS · IN YOUR POCKET</div>
+        <div style="display: flex; gap: 10px; align-items: flex-end">
+          <label style="flex: 1; display: flex; gap: 10px; align-items: flex-start; border: 1.5px solid {{composerBorder}}; background: #0E1528; padding: 10px 12px">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #6AF7FF; padding-top: 2px">john ›</span>
+            <span style="position: absolute; left: -9999px">Your message</span>
+            <textarea rows="3" placeholder="Type your answer, or use the hint on the right" style="flex: 1; resize: vertical; border: 0; outline: none; background: transparent; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.55"></textarea>
+          </label>
+          <button type="button" onClick="{{help}}" style="cursor: pointer; border: 1.5px solid #4ADE80; background: transparent; color: #4ADE80; padding: 13px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em">● USE COMPASS</button>
+          <button type="submit" style="cursor: pointer; border: 0; background: #3B82FF; color: #050611; padding: 15px 20px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 13px; letter-spacing: .14em; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)">SEND ↵</button>
+        </div>
+      </form>
+    </section>
+      <aside aria-label="Help item" style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+      <div style="background: #FFFFFF; border: 1px solid #DCD4C4; border-top: 4px solid #15803D; padding: 18px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .18em; color: #15803D">HELP ITEM</div>
+        <div style="display: flex; gap: 14px; align-items: center; margin-top: 10px">
+          <div style="flex: none"><div role="img" aria-label="HELP card: Pocket Compass, common, 0 of 3 stars" style="position: relative; flex: none; width: 104px; height: 146px; border-radius: 10px; padding: 3.5px; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 12px 26px rgba(14,26,51,.20)">
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(150deg, #4ADE80 0%, #15803D 45%, #14532D 100%)"></div>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 4.8px; letter-spacing: .14em; color: #FFFFFF; padding: 0.9px 1.7px 2.6px"><span>● HELP</span><span>S01 · 3/3</span></div>
+            <div style="position: relative; flex: 1 1 0; border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, rgba(74,222,128,0.45) 0%, #0E1A33 68%); display: flex; align-items: center; justify-content: center">
+              <div aria-hidden="true" class="v4-twinkle" style="position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 75% 20%, #BAE6FD 50%, transparent 51%), radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 30% 75%, #F5D0FE 50%, transparent 51%)"></div>
+              <svg viewBox="0 0 200 200" aria-hidden="true" style="position: relative; width: 92%; height: 92%">
+  <defs><linearGradient id="aigoBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".3" stop-color="#F8C65A"/><stop offset=".68" stop-color="#C9841C"/><stop offset="1" stop-color="#6E400C"/></linearGradient><radialGradient id="aigoCompGlow" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#BBF7D0" stop-opacity=".65"/><stop offset="1" stop-color="#4ADE80" stop-opacity="0"/></radialGradient>
+  <radialGradient id="aigoCompFace" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#166534"/><stop offset="1" stop-color="#052E16"/></radialGradient>
+  <linearGradient id="aigoNeedle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0FDF4"/><stop offset="1" stop-color="#22C55E"/></linearGradient></defs>
+  <circle cx="100" cy="108" r="86" fill="url(#aigoCompGlow)"/>
+  <circle cx="100" cy="30" r="10" fill="none" stroke="url(#aigoBrass)" stroke-width="5"/>
+  <circle cx="100" cy="108" r="68" fill="url(#aigoBrass)"/>
+  <circle cx="100" cy="108" r="58" fill="url(#aigoCompFace)"/>
+  <line x1="100.0" y1="64.0" x2="100.0" y2="55.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="118.4" y1="63.7" x2="120.3" y2="59.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="133.9" y1="74.1" x2="137.5" y2="70.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="144.3" y1="89.6" x2="149.0" y2="87.7" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="144.0" y1="108.0" x2="153.0" y2="108.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="144.3" y1="126.4" x2="149.0" y2="128.3" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="133.9" y1="141.9" x2="137.5" y2="145.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="118.4" y1="152.3" x2="120.3" y2="157.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="100.0" y1="152.0" x2="100.0" y2="161.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="81.6" y1="152.3" x2="79.7" y2="157.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="66.1" y1="141.9" x2="62.5" y2="145.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="55.7" y1="126.4" x2="51.0" y2="128.3" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="56.0" y1="108.0" x2="47.0" y2="108.0" stroke="#DCFCE7" stroke-width="2.2" opacity=".85"/><line x1="55.7" y1="89.6" x2="51.0" y2="87.7" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="66.1" y1="74.1" x2="62.5" y2="70.5" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/><line x1="81.6" y1="63.7" x2="79.7" y2="59.0" stroke="#DCFCE7" stroke-width="1.2" opacity=".85"/>
+  <text x="100" y="72" text-anchor="middle" font-family="Montserrat, sans-serif" font-weight="800" font-size="12" fill="#F0FDF4">N</text>
+  <g transform="rotate(32 100 108)">
+    <path d="M100 62 L110 108 L90 108 Z" fill="url(#aigoNeedle)"/>
+    <path d="M100 154 L110 108 L90 108 Z" fill="#CBD5E1" opacity=".85"/>
+  </g>
+  <circle cx="100" cy="108" r="7" fill="url(#aigoBrass)" stroke="#FFF4C2" stroke-width="1.5"/>
+  <path d="M62 82 A46 46 0 0 1 98 60" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>
+  <path d="M162 45 L163.75 50.25 L169 52 L163.75 53.75 L162 59 L160.25 53.75 L155 52 L160.25 50.25 Z" fill="#FFFFFF" opacity="0.9"/><path d="M40 155 L41.25 158.75 L45 160 L41.25 161.25 L40 165 L38.75 161.25 L35 160 L38.75 158.75 Z" fill="#FFFFFF" opacity="0.7"/>
+</svg>
+            </div>
+            <div style="position: relative; margin-top: 3.0px; background: #FFFFFF; border-radius: 6px; padding: 3.9px 4.3px 3.5px; display: flex; flex-direction: column; gap: 1.7px">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 4.1px; letter-spacing: .14em; text-transform: uppercase; color: #566072">The Clear Ask</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 7.4px; line-height: 1.1; color: #172033">Pocket Compass</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-size: 5.0px; color: #566072">Help · ~1 min</div>
+              <div style="font-family: 'IBM Plex Sans', sans-serif; font-style: italic; font-size: 5.2px; color: #172033">“One move.”</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.9px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 4.3px; color: #566072; letter-spacing: .1em">TOOL · NO STARS</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 4.3px; letter-spacing: .12em; color: #475569">● COMMON</span></div>
+            </div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: linear-gradient(165deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 32%)"></div>
+            
+            
+          </div></div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: 24px; line-height: 1">Pocket Compass</div>
+          <p style="margin: 6px 0 0; font-size: 13.5px; color: #566072; line-height: 1.5">Works once, on what already happened in the chat. Using it counts toward your Set 01 badge.</p></div>
+        </div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #DCD4C4; border-top: 4px solid #15803D; padding: 18px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .18em; color: #15803D">TRY HELP IN TWO STEPS</div>
+        <div style="margin: 10px 0 14px; font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; line-height: 2">
+          <div>[{{step1}}] load a sample work chat</div><div>[{{step2}}] press <b>USE COMPASS</b></div></div>
+        <div style="display: flex; gap: 8px">
+          <button onClick="{{load}}" style="cursor: pointer; border: 0; background: #15803D; color: #FFFFFF; padding: 11px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)">LOAD SAMPLE CHAT</button>
+          <button onClick="{{help}}" style="cursor: pointer; border: 1.5px solid #15803D; background: #FFFFFF; color: #166534; padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em">USE COMPASS</button>
+        </div>
+      </div>
+      <sc-if value="{{helped}}" hint-placeholder-val="{{ false }}">
+        <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 14px 16px; font-size: 14px; line-height: 1.55">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .18em; color: #166534">COUNTED AUTOMATICALLY</div>
+          <div style="margin-top: 6px">✓ Help used · Set 01 badge: 1 of 3 steps</div>
+          <div style="color: #566072">The site saw the HELP USED line. No code to copy.</div>
+        </div>
+      </sc-if>
+    </aside>
+    </div>
+  </main>
+</div>
+</template><div id="root"></div></body></html>
