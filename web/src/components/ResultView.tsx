@@ -116,8 +116,8 @@ export function ResultView({ result }: { result: ApplyResult }) {
   return (
     <div data-holo={holo ? "true" : undefined} className={styles.page}>
       <div className={styles.twoUp}>
-        <section aria-label="In your Claude chat" className={styles.chatCol}>
-          <div className={styles.colKicker}>1 · IN YOUR CLAUDE CHAT</div>
+        <section aria-label="In your AI chat" className={styles.chatCol}>
+          <div className={styles.colKicker}>1 · IN YOUR AI CHAT</div>
           <pre className={styles.term} role="img" aria-label={`TEST COMPLETE frame as printed by Claude: ${r.score} out of 100, ${r.stars} of 3 stars`}>
             {frame.lines.map((l, i) => (
               <FrameLine key={i} line={l} />
