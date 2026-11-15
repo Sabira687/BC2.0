@@ -5,7 +5,7 @@ import { useAigo } from "@/lib/client/useAigo";
 import { programOf } from "@/lib/progress";
 import { canLeaveDemo } from "@/lib/demo";
 import { PRICE_USD_PER_MONTH } from "@/lib/generator";
-import { stampPassport, whatYouCanDo } from "@/lib/progressview";
+import { stampPassport, testResultRows, whatYouCanDo } from "@/lib/progressview";
 import { setSky, skyNeighbours } from "@/lib/sky";
 import { Stamp } from "@/components/ui";
 import { PageFooter } from "./PageFooter";
@@ -26,6 +26,7 @@ export function ProgressView() {
   const sky = setSky(state);
   const pass = stampPassport(state);
   const can = whatYouCanDo(state);
+  const rows = testResultRows(state);
   const ff = state.demo.fastForwarded;
   const demoResult = ff ? demoResultView(state) : null;
 
@@ -166,6 +167,20 @@ export function ProgressView() {
           )}
         </section>
       </div>
+
+      <section aria-label="Test results" className={styles.tests}>
+        <div className={styles.testsKicker}>TEST RESULTS</div>
+        <ul className={styles.testList}>
+          {rows.map((r) => (
+            <li key={r.set} className={styles.testRow} data-tier={r.tier}>
+              <span>
+                Test · Set {r.set} · {r.title} — <strong>{r.status}</strong>
+              </span>
+              {r.action && <Link href={r.action.href}>{r.action.label}</Link>}
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section aria-label="Add a result code" className={styles.codeBox}>
         <div className={styles.codeIntro}>

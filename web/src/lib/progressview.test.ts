@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { TECHNIQUE_CODES } from "./tokens";
 import { createInitialState, createItem, fastForwardDemo } from "./progress";
-import { lessonForTechnique, stampBoard, techniqueInfo, whatYouCanDo, YOU_CAN } from "./progressview";
+import { lessonForTechnique, stampBoard, techniqueInfo, testResultRows, whatYouCanDo, YOU_CAN } from "./progressview";
 import { seededRandom } from "./testutil";
 import type { AppState } from "./types";
 
@@ -101,5 +101,22 @@ describe("stampPassport: spine, counter, caption", () => {
     expect(p.spine).toBe(`ADMIT ONE · VALID FOREVER · No. 0001 · ${s.profile.name.toUpperCase()}`);
     expect(p.countText).toBe("4 / 13");
     expect(p.caption).toBe("the Artifacts stamp comes with premium");
+  });
+});
+
+describe("testResultRows", () => {
+  it("fresh: Set 01 not taken yet, take link to the test card", () => {
+    const rows = testResultRows(fresh());
+    expect(rows[0]).toMatchObject({ set: "01", title: "The Clear Ask", status: "not taken yet", action: { label: "Take the test", href: "/item/test" } });
+  });
+  it("after fastForwardDemo: 90/100 ★★★ with Retake", () => {
+    const r = testResultRows(demo())[0]!;
+    expect(r.status).toBe("90/100 ★★★");
+    expect(r.action?.label).toBe("Retake");
+  });
+  it("later sets are not available yet", () => {
+    const rows = testResultRows(fresh());
+    expect(rows[1]).toMatchObject({ set: "02", status: "not available yet · free at launch", action: null });
+    expect(rows[7]).toMatchObject({ set: "08", status: "not available yet · Premium", action: null });
   });
 });

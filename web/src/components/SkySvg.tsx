@@ -1,4 +1,5 @@
-import type { SetSky, SkyNeighbour, SkyStar } from "@/lib/sky";
+import { useEffect, useState } from "react";
+import { neighbourTip, starStatus, starTip, type SetSky, type SkyNeighbour } from "@/lib/sky";
 import { LABEL, LINKS, POS, SKY_VIEWBOX } from "@/lib/skygeom";
 import styles from "./Progress.module.css";
 
@@ -18,10 +19,21 @@ const MINI: Record<SkyNeighbour["id"], [number, number][]> = {
 };
 const TONE: Record<SkyNeighbour["tone"], string> = { lit: "#93C5FD", bright: "#93C5FD", dim: "#7C8BAA", gold: "#FCD34D" };
 
-function Mini({ n }: { n: SkyNeighbour }) {
+function Mini({ n, open, setOpen }: { n: SkyNeighbour; open: string | null; setOpen: (id: string | null) => void }) {
   const pts = MINI[n.id];
   const col = TONE[n.tone];
+  const tip = neighbourTip(n);
   return (
+    <button
+      type="button"
+      className={styles.miniBtn}
+      aria-label={`${n.name} ${n.sub.toLowerCase()}. ${tip}`}
+      onMouseEnter={() => setOpen(n.id)}
+      onMouseLeave={() => setOpen(null)}
+      onFocus={() => setOpen(n.id)}
+      onBlur={() => setOpen(null)}
+      onClick={() => setOpen(n.id)}
+    >
     <svg viewBox="0 0 150 130" className={styles.mini} aria-hidden="true" data-neighbour={n.id}>
       {pts.slice(1).map((p, i) => (
         <line key={i} x1={pts[i]![0] + 40} y1={pts[i]![1] + 8} x2={p[0] + 40} y2={p[1] + 8} stroke={col} strokeOpacity=".5" strokeWidth="1" />
@@ -32,6 +44,8 @@ function Mini({ n }: { n: SkyNeighbour }) {
       <text x="75" y="102" textAnchor="middle" className={styles.miniName} fill={col}>{n.name}</text>
       <text x="75" y="119" textAnchor="middle" className={styles.miniSub} fill={col}>{n.sub}</text>
     </svg>
+      {open === n.id && <span role="tooltip" className={styles.miniTip}>{tip}</span>}
+    </button>
   );
 }
 
@@ -39,6 +53,14 @@ export function SkySvg({ sky, neighbours }: { sky: SetSky; neighbours: SkyNeighb
   const lit = new Set(sky.stars.filter((s) => s.lit).map((s) => s.id));
   const gold = sky.complete;
   const col = gold ? "#FCD34D" : "#BAE6FD";
+  const [open, setOpen] = useState<string | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+  const openStar = sky.stars.find((s) => s.id === open);
   return (
     <div className={styles.skyStage}>
       {/* Narrow screens: the constellation is replaced by a plain vertical list of the same 7 stars (CSS swaps them). */}
@@ -47,7 +69,7 @@ export function SkySvg({ sky, neighbours }: { sky: SetSky; neighbours: SkyNeighb
           <li key={s.id} className={styles.skyItem} data-lit={s.lit ? "true" : "false"} data-next={s.next ? "true" : "false"}>
             <span className={styles.skyDot} aria-hidden="true">{s.lit ? "★" : s.next ? "◎" : "☆"}</span>
             <span>{s.label}</span>
-            <span className={styles.skyState}>{s.lit ? "lit" : s.next ? "next" : "locked"}</span>
+            <span className={styles.skyState}>{starStatus(s)}</span>
           </li>
         ))}
       </ol>
@@ -64,7 +86,22 @@ export function SkySvg({ sky, neighbours }: { sky: SetSky; neighbours: SkyNeighb
             const [x, y] = POS[s.id];
             const l = LABEL[s.id];
             return (
-              <g key={s.id} data-star={s.id} data-lit={s.lit ? "true" : "false"}>
+              <g
+                key={s.id}
+                data-star={s.id}
+                data-lit={s.lit ? "true" : "false"}
+                className={styles.skyStar}
+                role="button"
+                tabIndex={0}
+                aria-label={starTip(s)}
+                onMouseEnter={() => setOpen(s.id)}
+                onMouseLeave={() => setOpen(null)}
+                onFocus={() => setOpen(s.id)}
+                onBlur={() => setOpen(null)}
+                onClick={() => setOpen(s.id)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(s.id); } }}
+              >
+                <circle cx={x} cy={y} r="22" fill="transparent" />
                 {s.lit ? (
                   <>
                     <circle cx={x} cy={y} r="18" fill={col} opacity=".18" />
@@ -82,11 +119,24 @@ export function SkySvg({ sky, neighbours }: { sky: SetSky; neighbours: SkyNeighb
               </g>
             );
           })}
+          {openStar && (() => {
+            const [x, y] = POS[openStar.id];
+            const text = starTip(openStar);
+            const w = text.length * 9.5 + 20;
+            const cx = Math.min(Math.max(x, SKY_VIEWBOX[0] + w / 2 + 4), SKY_VIEWBOX[0] + SKY_VIEWBOX[2] - w / 2 - 4);
+            const ty = y < 90 ? y + 30 : y - 54;
+            return (
+              <g className={styles.skyTip} pointerEvents="none" aria-hidden="true">
+                <rect x={cx - w / 2} y={ty} width={w} height="26" rx="4" fill="#050611" stroke="#6AF7FF" strokeOpacity=".7" />
+                <text x={cx} y={ty + 17.5} textAnchor="middle" className={styles.skyLabel} fill="#E2E8F0">{text}</text>
+              </g>
+            );
+          })()}
         </svg>
       </div>
-      <div className={styles.minis} aria-hidden="true">
+      <div className={styles.minis}>
         {neighbours.map((n) => (
-          <Mini key={n.id} n={n} />
+          <Mini key={n.id} n={n} open={open} setOpen={setOpen} />
         ))}
       </div>
     </div>

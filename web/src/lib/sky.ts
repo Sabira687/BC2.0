@@ -67,3 +67,20 @@ export function skyNeighbours(state: AppState): SkyNeighbour[] {
     { id: "premium", name: "PREMIUM ★", sub: "8 CONSTELLATIONS", tone: "gold" },
   ];
 }
+
+/** Tooltip status of a Set 01 star. */
+export function starStatus(star: Pick<SkyStar, "lit" | "next">): "Done" | "Next" | "Not yet" {
+  return star.lit ? "Done" : star.next ? "Next" : "Not yet";
+}
+
+/** Tooltip text of a Set 01 star: the step name + status. */
+export function starTip(star: Pick<SkyStar, "label" | "lit" | "next">): string {
+  return `${star.label} · ${starStatus(star)}`;
+}
+
+/** Tooltip text of a neighbouring constellation. */
+export function neighbourTip(n: Pick<SkyNeighbour, "id" | "tone">): string {
+  if (n.id === "premium") return "Unlocks with Premium";
+  if (n.id === "player_one") return n.tone === "lit" ? "Gift earned" : "A gift for finishing Set 01";
+  return "Available at launch";
+}

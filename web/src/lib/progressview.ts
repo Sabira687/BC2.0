@@ -3,7 +3,7 @@
  * now". Real data only. The skill sky lives in ./sky.
  */
 import type { AppState, ModuleId, TechniqueCode } from "./types";
-import { MODULES, lessonForTechnique, tierOfSet } from "./content";
+import { CATALOG, MODULES, lessonForTechnique, tierOfSet } from "./content";
 export { lessonForTechnique, type LessonRef } from "./content";
 import { MODULE_IDS, TECHNIQUE_CODES } from "./tokens";
 import { difficultyOf, stampBook, type Difficulty } from "./album";
@@ -158,4 +158,41 @@ export function stampPassport(state: AppState): Passport {
     spine: `ADMIT ONE · VALID FOREVER · No. 0001 · ${state.profile.name.toUpperCase()}`,
     caption: "the Artifacts stamp comes with premium",
   };
+}
+
+// ───────────────────────── Test results list ─────────────────────────
+
+export interface TestRow {
+  set: string;
+  title: string;
+  /** "90/100 ★★★", "not taken yet" or "not available yet · free at launch". */
+  status: string;
+  /** Link label and target; null when the set is not available yet. */
+  action: { label: string; href: string } | null;
+  tier: "demo" | "free" | "premium";
+}
+
+/** One row per catalog set: Set 01 from the stored result, the rest not available yet. */
+export function testResultRows(state: AppState): TestRow[] {
+  return CATALOG.map((s, i) => {
+    const n = i + 1;
+    if (n === 1) {
+      const r = state.results.m1;
+      return {
+        set: s.number,
+        title: s.title,
+        tier: "demo" as const,
+        status: r ? `${r.score}/100 ${"★".repeat(r.stars)}${"☆".repeat(3 - r.stars)}` : "not taken yet",
+        action: { label: r ? "Retake" : "Take the test", href: "/item/test" },
+      };
+    }
+    const premium = tierOfSet(n) === "premium";
+    return {
+      set: s.number,
+      title: s.title,
+      tier: premium ? ("premium" as const) : ("free" as const),
+      status: `not available yet · ${premium ? "Premium" : "free at launch"}`,
+      action: null,
+    };
+  });
 }

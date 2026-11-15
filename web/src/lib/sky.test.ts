@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState, fastForwardDemo } from "./progress";
 import { seededRandom } from "./testutil";
-import { setSky, skyNeighbours, skySet } from "./sky";
+import { neighbourTip, setSky, skyNeighbours, skySet, starTip } from "./sky";
 import type { AppState } from "./types";
 
 const fresh = (): AppState => createInitialState(seededRandom(3));
@@ -69,5 +69,21 @@ describe("skyNeighbours", () => {
     const n = skyNeighbours(demo());
     expect(n[1]).toMatchObject({ sub: "AT LAUNCH", tone: "bright" });
     expect(n[2]).toMatchObject({ sub: "AT LAUNCH", tone: "bright" });
+  });
+});
+
+describe("tooltips", () => {
+  it("starTip: step name + Done / Next / Not yet", () => {
+    const sky = skySet({ ...fresh(), learnStars: { m1: 1 as const } }, "m1");
+    expect(starTip(sky[0]!)).toBe("1.1 The brief formula · Done");
+    expect(starTip(sky[1]!)).toBe("1.2 Ask for the shape · Next");
+    expect(starTip(sky[2]!)).toBe("1.3 Give it the material · Not yet");
+  });
+  it("neighbourTip: 02/03 at launch, Premium unlocks with Premium", () => {
+    const n = skyNeighbours(fresh());
+    const tip = (id: string) => neighbourTip(n.find((x) => x.id === id)!);
+    expect(tip("s02")).toBe("Available at launch");
+    expect(tip("s03")).toBe("Available at launch");
+    expect(tip("premium")).toBe("Unlocks with Premium");
   });
 });
