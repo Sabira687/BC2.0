@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useAigo } from "@/lib/client/useAigo";
-import { API_KEY_NOTE, hintFor, itemKindOf, lastStatus } from "@/lib/console";
+import { wantsTestCard } from "@/lib/demoPath";
+import { API_KEY_NOTE, findResultCode, hintFor, itemKindOf, lastStatus } from "@/lib/console";
 import { captureNotices, gainFor } from "@/lib/notices";
 import type { Captured } from "@/lib/capture";
 import { activeCardView } from "@/lib/markers";
@@ -35,6 +37,40 @@ export function LessonView() {
   const [input, setInput] = useState("");
   const [applied, setApplied] = useState<{ code: string; result: ApplyResult } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const router = useRouter();
+  const wantTest = wantsTestCard(useSearchParams().get("card"));
+  const cardTried = useRef(false);
+  const [pendingStart, setPendingStart] = useState(false);
+  const [offerDone, setOfferDone] = useState(false);
+  const testId = itemId("test", "m1");
+  const testText = state ? itemText(testId) : null;
+  const ready = state !== null && chat.messages !== null;
+  const empty = ready && chat.messages!.length === 0;
+
+  // "Start the test" on a non-empty conversation: reset first, send once the messages are empty.
+  useEffect(() => {
+    if (!pendingStart || !empty || testText === null) return;
+    setPendingStart(false);
+    setGainEntry(null);
+    chat.send(testText);
+  }, [pendingStart, empty, testText, chat]);
+
+  // /console?card=test: create the Test card if needed, then load it (only into an empty conversation).
+  useEffect(() => {
+    if (!wantTest || !ready || cardTried.current) return;
+    if (testText === null) {
+      if (!state!.created.includes(testId)) actions.createItem(testId);
+      return;
+    }
+    if (!empty) {
+      cardTried.current = true;
+      return;
+    }
+    cardTried.current = true;
+    setOfferDone(true);
+    setGainEntry(null);
+    chat.send(testText);
+  }, [wantTest, ready, empty, testText, state, testId, actions, chat]);
 
   if (!state || chat.messages === null) return <p>Loading…</p>;
   const messages = chat.messages;
@@ -100,6 +136,19 @@ export function LessonView() {
     textareaRef.current?.focus();
   }
 
+  function onStartTest() {
+    setOfferDone(true);
+    setApplied(null);
+    setGainEntry(null);
+    setPendingStart(true);
+    chat.reset();
+  }
+
+  function onSeeResult(code: string) {
+    actions.applyResultCode(code);
+    router.push(`/result/${encodeURIComponent(code)}`);
+  }
+
   function onApplyResult(code: string) {
     setApplied({ code, result: actions.applyResultCode(code) });
   }
@@ -154,7 +203,20 @@ export function LessonView() {
           emptyTitle="Your lesson starts here"
           emptyText="Load your Learn card to start. Claude will greet you here."
         />
+        {!chat.busy && last?.role === "assistant" && last.content.includes("TEST COMPLETE") && findResultCode(last.content) && (
+          <button type="button" className={styles.seeResult} onClick={() => onSeeResult(findResultCode(last.content)!)}>
+            See your result ▸
+          </button>
+        )}
         {chat.error && <ChatError error={chat.error} canRetry={canRetry} onRetry={chat.retry} />}
+        {wantTest && !empty && !offerDone && !pendingStart && testText !== null && (
+          <p className={styles.startTest} role="status">
+            Ready for the test? This starts a fresh conversation.{" "}
+            <button type="button" disabled={chat.busy} onClick={onStartTest}>
+              Start the test ▸
+            </button>
+          </p>
+        )}
         <Composer
           name={name}
           value={input}

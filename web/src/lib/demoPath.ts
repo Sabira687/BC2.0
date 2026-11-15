@@ -15,13 +15,20 @@ export interface DemoStep {
   done: boolean;
 }
 
+export const TEST_HREF = "/console?card=test";
+
+/** `/console?card=test` asks the console to load the TEST card. */
+export function wantsTestCard(v: string | null | undefined): boolean {
+  return v === "test";
+}
+
 export function demoPath(state: AppState, seen: { result: boolean }): DemoStep[] {
   return [
     { id: "items", label: "Make your items", href: "/start", done: state.created.length > 0 },
     { id: "lesson", label: "Pass lesson 1.1 in the console", href: "/console", done: (state.learnStars.m1 ?? 0) >= 1 },
     { id: "help", label: "Use the Compass in Work chat", href: "/console?tab=work", done: state.helpUsed },
     { id: "forward", label: "Fast-forward John", href: "/progress", done: state.demo.fastForwarded },
-    { id: "result", label: "See the test result", href: "/progress", done: seen.result },
+    { id: "result", label: "Take the test", href: TEST_HREF, done: seen.result },
   ];
 }
 

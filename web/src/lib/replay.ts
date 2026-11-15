@@ -109,6 +109,7 @@ export function pickReplay(messages: readonly ChatMessage[]): string {
   const kind = itemKindOf(text);
   if (kind === "help") return replayReply(REPLAY_HELP, 0);
   if (kind === "learn") return replayReply(REPLAY_LEARN_L11, 0);
+  if (kind === "test") return note("the test runs only with the live AI. To see a finished test, press Fast-forward John on Progress (90/100 ★★★).");
 
   const step = recordedStep(messages);
   const inLesson = step >= 0 || messages.some((m) => m.role === "user" && itemKindOf(m.content) === "learn");

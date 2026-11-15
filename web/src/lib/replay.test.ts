@@ -71,6 +71,11 @@ describe("replayReply", () => {
 });
 
 describe("pickReplay (lesson)", () => {
+  it("says the test needs the live AI", () => {
+    const testCard = u("AIGO ░ TEST\n" + learnCard.content);
+    const r = pickReplay([testCard].map((m) => ({ ...m, content: learnCard.content.replace("AIGO ░ LEARN", "AIGO ░ TEST") })));
+    expect(r).toContain("the test runs only with the live AI");
+  });
   it("answers the LEARN card with the activation", () => {
     expect(pickReplay([learnCard])).toBe(REPLAY_LEARN_L11[0]);
   });

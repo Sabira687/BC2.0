@@ -989,3 +989,24 @@
 
 .keyNote { margin: 0; padding: 4px 14px; font-family: var(--font-mono); font-size: 11px; line-height: 1.4; color: var(--muted); border-bottom: 1px solid var(--line); }
 .helperPlaque { margin: 0 0 8px; padding: 8px 12px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.45; color: var(--ink); background: #fffbf2; border: 1px dashed #b45309; }
+
+.seeResult {
+  display: block;
+  margin: 12px auto;
+  padding: 14px 28px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1020;
+  background: #f0abfc;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.startTest {
+  margin: 8px 0;
+  padding: 10px 14px;
+  border: 1px solid #f0abfc;
+  border-radius: 8px;
+  font-weight: 600;
+}

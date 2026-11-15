@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { DEMO_PATH_KEY, panelOpen, consoleTabFromParam, markResultSeen, readDemoPathPrefs, demoPath, demoPathDone, parseDemoPathPrefs } from "./demoPath";
+import { DEMO_PATH_KEY, panelOpen, consoleTabFromParam, markResultSeen, readDemoPathPrefs, demoPath, demoPathDone, parseDemoPathPrefs, wantsTestCard } from "./demoPath";
 import { createInitialState, createItem, fastForwardDemo, openSet } from "./progress";
 import { markHelpUsed } from "./workchat";
 import type { AppState } from "./types";
@@ -14,7 +14,7 @@ describe("demoPath", () => {
       ["lesson", "/console"],
       ["help", "/console?tab=work"],
       ["forward", "/progress"],
-      ["result", "/progress"],
+      ["result", "/console?card=test"],
     ]);
   });
   it("a new player has nothing done", () => {
@@ -91,5 +91,15 @@ describe("panelOpen", () => {
   it("the visitor's toggle wins everywhere", () => {
     expect(panelOpen({ ...base, collapsed: false }, "/progress")).toBe(true);
     expect(panelOpen({ ...base, collapsed: true }, "/collection")).toBe(false);
+  });
+});
+
+describe("wantsTestCard", () => {
+  it("is true only for card=test", () => {
+    expect(wantsTestCard("test")).toBe(true);
+    expect(wantsTestCard("learn")).toBe(false);
+    expect(wantsTestCard("")).toBe(false);
+    expect(wantsTestCard(null)).toBe(false);
+    expect(wantsTestCard(undefined)).toBe(false);
   });
 });

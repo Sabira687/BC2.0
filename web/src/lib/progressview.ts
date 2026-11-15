@@ -183,7 +183,7 @@ export function testResultRows(state: AppState): TestRow[] {
         title: s.title,
         tier: "demo" as const,
         status: r ? `${r.score}/100 ${"★".repeat(r.stars)}${"☆".repeat(3 - r.stars)}` : "not taken yet",
-        action: { label: r ? "Retake" : "Take the test", href: "/item/test" },
+        action: { label: r ? "Retake" : "Take the test", href: "/console?card=test" },
       };
     }
     const premium = tierOfSet(n) === "premium";

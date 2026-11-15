@@ -107,7 +107,7 @@ describe("stampPassport: spine, counter, caption", () => {
 describe("testResultRows", () => {
   it("fresh: Set 01 not taken yet, take link to the test card", () => {
     const rows = testResultRows(fresh());
-    expect(rows[0]).toMatchObject({ set: "01", title: "The Clear Ask", status: "not taken yet", action: { label: "Take the test", href: "/item/test" } });
+    expect(rows[0]).toMatchObject({ set: "01", title: "The Clear Ask", status: "not taken yet", action: { label: "Take the test", href: "/console?card=test" } });
   });
   it("after fastForwardDemo: 90/100 ★★★ with Retake", () => {
     const r = testResultRows(demo())[0]!;
