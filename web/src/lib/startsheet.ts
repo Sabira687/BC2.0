@@ -31,3 +31,13 @@ export function nameTag(valid: string | null, edited: boolean): { text: string; 
   if (valid === null) return { text: "CHECK THE NAME", tone: "error" };
   return edited ? { text: "YOUR ANSWER ✓", tone: "ink" } : { text: "DEMO · TYPE YOUR OWN", tone: "pencil" };
 }
+
+/** True when every required answer is non-empty. */
+export function allRequiredFilled(answers: readonly (string | null | undefined)[]): boolean {
+  return answers.every((a) => typeof a === "string" && a.trim() !== "");
+}
+
+/** Sheet number shown in the header; a dash until the player ID is known. */
+export function sheetNo(playerId: string | null | undefined): string {
+  return `NO. ${playerId ? playerId : "—"}`;
+}

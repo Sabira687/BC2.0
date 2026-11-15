@@ -13,5 +13,8 @@ describe("guide content", () => {
     expect(GUIDE_WAYS[0].note).toBe("for real users · not needed for this demo");
     expect(GUIDE_CHECKLIST).toHaveLength(5);
     expect(GUIDE_CONNECTOR.kicker).toMatch(/PREMIUM/);
+    expect(GUIDE_CONNECTOR.title).toBe("Connect AIGO to your AI · with Premium · at launch");
+    expect(GUIDE_CONNECTOR.text).toBe("Add AIGO once in Claude under Settings → Connectors. Then your AI opens your items itself and progress saves without codes.");
+    expect(GUIDE_CONNECTOR.label).toBe("coming with Premium");
   });
 });

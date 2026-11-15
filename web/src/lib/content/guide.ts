@@ -29,6 +29,7 @@ export const GUIDE_CHECKLIST: readonly string[] = ["get your AI", "copy an item"
 
 export const GUIDE_CONNECTOR = {
   kicker: "★ WITH PREMIUM · AT LAUNCH",
-  title: "AIGO Connector",
-  text: "Add it once in Claude under Settings → Connectors. Then Claude can open your items itself, and progress saves without codes.",
+  title: "Connect AIGO to your AI · with Premium · at launch",
+  text: "Add AIGO once in Claude under Settings → Connectors. Then your AI opens your items itself and progress saves without codes.",
+  label: "coming with Premium",
 } as const;

@@ -50,6 +50,7 @@ export default function GuidePage() {
           <div className="kicker" style={{ color: "#b45309", fontSize: 11 }}>{GUIDE_CONNECTOR.kicker}</div>
           <h3>{GUIDE_CONNECTOR.title}</h3>
           <p>{GUIDE_CONNECTOR.text}</p>
+          <span className={styles.soon}>{GUIDE_CONNECTOR.label}</span>
         </div>
       </aside>
     </div>

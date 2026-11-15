@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isNameEdited, inkGreeting, nameTag } from "./startsheet";
+import { isNameEdited, inkGreeting, nameTag, allRequiredFilled, sheetNo } from "./startsheet";
 
 describe("start sheet helpers", () => {
   it("name is a demo answer until it differs from John", () => {
@@ -40,6 +40,24 @@ describe("nameTag", () => {
     expect(nameTag(null, true)).toEqual({ text: "CHECK THE NAME", tone: "error" });
     expect(nameTag("Anna", true)).toEqual({ text: "YOUR ANSWER ✓", tone: "ink" });
     expect(nameTag("John", false)).toEqual({ text: "DEMO · TYPE YOUR OWN", tone: "pencil" });
+    expect(contrastRatio(C.error, C.sheet)).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe("required + sheet number", () => {
+  it("allRequiredFilled", () => {
+    expect(allRequiredFilled(["a", "b"])).toBe(true);
+    expect(allRequiredFilled(["a", ""])).toBe(false);
+    expect(allRequiredFilled(["a", "  "])).toBe(false);
+    expect(allRequiredFilled(["a", null])).toBe(false);
+    expect(allRequiredFilled(["a", undefined])).toBe(false);
+  });
+  it("sheetNo", () => {
+    expect(sheetNo("67VGT")).toBe("NO. 67VGT");
+    expect(sheetNo(null)).toBe("NO. —");
+    expect(sheetNo(undefined)).toBe("NO. —");
+  });
+  it("required asterisk is readable on the sheet", () => {
     expect(contrastRatio(C.error, C.sheet)).toBeGreaterThanOrEqual(4.5);
   });
 });

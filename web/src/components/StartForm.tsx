@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Stamp } from "@/components/ui";
 import { firstReply } from "@/lib/startpreview";
-import { inkGreeting } from "@/lib/startsheet";
+import { inkGreeting, allRequiredFilled, sheetNo } from "@/lib/startsheet";
 import styles from "./StartForm.module.css";
 import { useAigo } from "@/lib/client/useAigo";
 import { JOHN, validateProfile, type ProfileErrors } from "@/lib/profile";
@@ -27,11 +27,15 @@ function Lock() {
   return <span className={styles.lock} title="Demo answer, locked">🔒 DEMO</span>;
 }
 
+function Req() {
+  return <><span className={styles.req} aria-hidden="true">*</span><span className={styles.sr}> required</span></>;
+}
+
 function Q({ n, text, hint, locked, children }: { n: number; text: string; hint?: string; locked?: boolean; children: ReactNode }) {
   return (
     <div className={styles.row} role="group" aria-label={`Question ${n}: ${text}${locked ? ". Demo answer, locked" : ""}`}>
       <div className={styles.q}>
-        {n}. {text} {hint && <span className={styles.hint}>({hint})</span>}
+        {n}. {text}<Req /> {hint && <span className={styles.hint}>({hint})</span>}
         {locked && <Lock />}
       </div>
       {children}
@@ -53,9 +57,9 @@ function Ticks({ options, chosen }: { options: string[]; chosen: string }) {
   );
 }
 
-function Marked({ options, chosen, kind }: { options: string[]; chosen: string; kind: "circle" | "underline" }) {
+function Marked({ options, chosen, kind, grid }: { options: string[]; chosen: string; kind: "circle" | "underline"; grid?: boolean }) {
   return (
-    <ul className={styles.marked}>
+    <ul className={`${styles.marked} ${grid ? styles.grid : ""}`}>
       {options.map((o) => (
         <li key={o} className={o === chosen ? `${styles.pencilOn} ${kind === "circle" ? styles.circle : styles.underline}` : styles.off}>
           {o}
@@ -69,10 +73,10 @@ function Marked({ options, chosen, kind }: { options: string[]; chosen: string; 
 export function StartForm() {
   const { state } = useAigo();
   if (!state) return <p>Loading…</p>;
-  return <StartFormInner initial={state.profile} />;
+  return <StartFormInner initial={state.profile} playerId={state.secrets.playerId} />;
 }
 
-function StartFormInner({ initial }: { initial: Profile }) {
+function StartFormInner({ initial, playerId }: { initial: Profile; playerId?: string | null }) {
   const { actions } = useAigo();
   const router = useRouter();
   const [style, setStyle] = useState<StyleChoice>(initial.style === "straight" ? "straight" : "mentor");
@@ -91,6 +95,7 @@ function StartFormInner({ initial }: { initial: Profile }) {
   }
 
   const shown = JOHN.name;
+  const allFilled = allRequiredFilled([JOHN.name, "an office manager", "only chat: questions & answers", "automator", "grow at my job", style, "Claude Chat", "Pro"]);
   const reply = firstReply(style, shown);
 
   return (
@@ -100,7 +105,7 @@ function StartFormInner({ initial }: { initial: Profile }) {
         <div className={styles.holes} aria-hidden="true"><span /><span /><span /></div>
         <div className={styles.head}>
           <div>
-            <div className={styles.no}>AIGO · PLAYER QUESTIONNAIRE · NO. 0001</div>
+            <div className={styles.no}>AIGO · PLAYER QUESTIONNAIRE · {sheetNo(playerId)}</div>
             <div className={styles.title}>All about me ✎</div>
           </div>
           <div className={styles.legend}>
@@ -115,14 +120,14 @@ function StartFormInner({ initial }: { initial: Profile }) {
           <Ticks options={["only chat: questions & answers", "tried an AI agent", "work with agents often"]} chosen="only chat: questions & answers" />
         </Q>
         <Q n={4} text="Who do I want to become?" hint="circle it" locked>
-          <Marked options={["everyday user", "power user", "automator", "my own Jarvis"]} chosen="automator" kind="circle" />
+          <Marked options={["everyday user", "power user", "automator", "my own Jarvis"]} chosen="automator" kind="circle" grid />
         </Q>
         <Q n={5} text="Why?" hint="underline" locked>
-          <Marked options={["grow at my job", "change careers", "my own project"]} chosen="grow at my job" kind="underline" />
+          <Marked options={["grow at my job", "change careers", "my own project"]} chosen="grow at my job" kind="underline" grid />
         </Q>
 
         <fieldset className={styles.row}>
-          <legend className={styles.q}>6. How should my AI teach me? <span className={styles.hint}>(pick a sticker!)</span></legend>
+          <legend className={styles.q}>6. How should my AI teach me?<Req /> <span className={styles.hint}>(pick a sticker!)</span></legend>
           <div className={styles.stickers}>
             {STICKERS.map((s) => {
               const on = style === s.value;
@@ -160,7 +165,7 @@ function StartFormInner({ initial }: { initial: Profile }) {
         {(errors.age || errors.level || errors.goal || errors.reason || errors.assistant || errors.plan) && (
           <p role="alert" className={styles.error}>The demo answers could not be checked. Reload the page and try again.</p>
         )}
-        <div className={styles.thanks}><span>Thank you for filling it in! ☺</span><span aria-hidden="true" className={styles.star}>★</span></div>
+        <div className={styles.thanks}><span>Thank you for filling it in! ☺</span><span aria-hidden="true" className={styles.star}>{allFilled ? "★" : "☆"}</span><span className={styles.sr}>{allFilled ? " All required questions answered" : " Some required questions are empty"}</span></div>
       </form>
 
       <aside className={styles.side} aria-label="Why you are filling this in">
