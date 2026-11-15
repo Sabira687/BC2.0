@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { DAYS, REMIND_OPTIONS, TIMES, loadSchedule, saveSchedule, startReminder, type Day, type Schedule } from "@/lib/schedule";
 import { Stamp } from "@/components/ui";
 import { firstReply } from "@/lib/startpreview";
 import { inkGreeting, allRequiredFilled, sheetNo } from "@/lib/startsheet";
@@ -74,6 +75,61 @@ export function StartForm() {
   const { state } = useAigo();
   if (!state) return <p>Loading…</p>;
   return <StartFormInner initial={state.profile} playerId={state.secrets.playerId} />;
+}
+
+function ScheduleQ() {
+  const [days, setDays] = useState<Day[]>([]);
+  const [time, setTime] = useState("18:00");
+  const [remind, setRemind] = useState<10 | 20 | 30>(20);
+  const [perm, setPerm] = useState<string>("default");
+  const hasNotif = typeof Notification !== "undefined";
+
+  useEffect(() => {
+    const s = loadSchedule();
+    if (s) { setDays(s.days); setTime(s.time); setRemind(s.remind); }
+    if (typeof Notification !== "undefined") setPerm(Notification.permission);
+  }, []);
+
+  const current: Schedule | null = days.length ? { days: DAYS.filter((d) => days.includes(d)), time, remind } : null;
+
+  useEffect(() => {
+    saveSchedule(current);
+    return startReminder(current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [days, time, remind]);
+
+  function toggle(d: Day) {
+    setDays((cur) => (cur.includes(d) ? cur.filter((x) => x !== d) : [...cur, d]));
+  }
+
+  return (
+    <fieldset className={styles.row}>
+      <legend className={styles.q}>9. Schedule your lessons? <span className={styles.hint}>(optional)</span></legend>
+      <div className={styles.chips}>
+        {DAYS.map((d) => (
+          <button key={d} type="button" aria-pressed={days.includes(d)} onClick={() => toggle(d)} className={`${styles.chip} ${days.includes(d) ? styles.chipOn : ""}`}>{d}</button>
+        ))}
+      </div>
+      <div className={styles.schedRow}>
+        <label className={styles.inkLabel}>at{" "}
+          <select value={time} onChange={(e) => setTime(e.target.value)} className={styles.inkSelect}>
+            {TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </label>
+        <label className={styles.inkLabel}>remind me{" "}
+          <select value={remind} onChange={(e) => setRemind(Number(e.target.value) as 10 | 20 | 30)} className={styles.inkSelect}>
+            {REMIND_OPTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
+          </select>{" "}minutes before
+        </label>
+      </div>
+      {hasNotif && perm !== "granted" && perm !== "denied" && (
+        <button type="button" className={styles.allow} onClick={() => { Notification.requestPermission().then((p) => setPerm(p)).catch(() => {}); }}>Allow reminders</button>
+      )}
+      {hasNotif && perm === "granted" && <span className={styles.note}>Reminders allowed.</span>}
+      {hasNotif && perm === "denied" && <span className={styles.note}>Reminders are blocked in your browser settings.</span>}
+      <p className={styles.note}>Demo: reminders work while this tab is open; at launch — email and push.</p>
+    </fieldset>
+  );
 }
 
 function StartFormInner({ initial, playerId }: { initial: Profile; playerId?: string | null }) {
@@ -162,6 +218,7 @@ function StartFormInner({ initial, playerId }: { initial: Profile; playerId?: st
         <Q n={8} text="My Claude plan" hint="circle it" locked>
           <Marked options={["Free", "Pro", "Max"]} chosen="Pro" kind="circle" />
         </Q>
+        <ScheduleQ />
         {(errors.age || errors.level || errors.goal || errors.reason || errors.assistant || errors.plan) && (
           <p role="alert" className={styles.error}>The demo answers could not be checked. Reload the page and try again.</p>
         )}

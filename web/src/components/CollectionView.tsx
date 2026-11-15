@@ -10,6 +10,7 @@ import { cardFace, nextStep } from "@/lib/nextstep";
 import { kindOf, setBadgeSteps } from "@/lib/progress";
 import type { AppState, ItemId } from "@/lib/types";
 import { Card } from "@/components/ui";
+import { formatNext, loadSchedule, startReminder, type Schedule } from "@/lib/schedule";
 import { RevealOverlay, type RevealCard } from "./RevealOverlay";
 import { PageFooter } from "./PageFooter";
 import styles from "./CollectionView.module.css";
@@ -211,6 +212,13 @@ export function CollectionView() {
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   };
 
+  const [schedule, setSchedule] = useState<Schedule | null>(null);
+  useEffect(() => {
+    const s = loadSchedule();
+    setSchedule(s);
+    return startReminder(s);
+  }, []);
+
   useEffect(() => {
     actions.viewCollection();
   }, [actions]);
@@ -314,6 +322,7 @@ export function CollectionView() {
             <div className={styles.nextKick}>NEXT STEP</div>
             <div className={styles.nextTitle}>{step.title}</div>
             <p className="muted">{step.text}</p>
+            {schedule && <p className="muted">{formatNext(schedule, new Date())}</p>}
           </div>
           {step.openSet ? (
             <div className={styles.openRow}>
