@@ -2,7 +2,7 @@
 
 **AIGO Collection** (AIGO for short) **is a collection of skill cards for working with AI.** Each card
 is a hidden instruction block you paste into Claude: Claude answers `▶ ITEM ACTIVATED · …` and turns
-into a coach, an examiner or a helper. Cards are grouped in **sets** (set = module = skill); mastery
+into a teacher, an examiner or a helper. Cards are grouped in **sets** (set = module = skill); mastery
 is visible as **stars**, a **holographic** TEST card, a **stamp book** of verified techniques and a
 **set badge**. Nothing is random, nothing is sold per card, no streaks, no points.
 
