@@ -15,11 +15,13 @@ import styles from "./ItemView.module.css";
 
 const STEPS: [string, string][] = [
   ["Copy the item", "A short block of text with the lessons inside."],
-  ["Paste into a new chat", "In the AIGO console or in your own Claude."],
+  ["Paste into a new chat", "In the AIGO console or in your own AI."],
   ["Look for ▶ ITEM ACTIVATED", "Your AI switches to the card's mode. Stars come when it checks your work."],
 ];
 
-function Tooltip({ model }: { model: ItemPageModel }) {
+const STAT_ICON: Record<string, string> = { LESSONS: "📖", TASKS: "📝", TIME: "⏱", "PRACTICE ON": "🎯", "WORKS IN": "💻", USE: "⚡", "BEST SCORE": "🏆", USED: "✔", "SET BADGE": "🎖", STARS: "★" };
+
+function Tooltip({ model, children }: { model: ItemPageModel; children?: React.ReactNode }) {
   return (
     <section aria-label="Item stats" className={`${styles.tooltip} cutPanel`} data-kind={model.kind}>
       <div className={styles.tipHead}>
@@ -33,21 +35,30 @@ function Tooltip({ model }: { model: ItemPageModel }) {
       <dl className={styles.stats}>
         {model.stats.map((s) => (
           <div key={s.label} className={styles.stat}>
-            <dt>{s.label}</dt>
-            <dd>{s.value}</dd>
+            <dt>
+              <span className={styles.statIcon} aria-hidden="true">{STAT_ICON[s.label] ?? "•"}</span>
+              {s.label}
+            </dt>
+            <dd>
+              {s.label === "STARS" && model.stars !== null ? <Stars value={model.stars} size={26} showText /> : <span className={s.label === "LESSONS" || s.label === "TIME" || s.label === "WORKS IN" || s.label === "PRACTICE ON" ? styles.chip : undefined}>{s.value}</span>}
+            </dd>
           </div>
         ))}
       </dl>
       <hr className={styles.rule} />
       <div className={styles.plus}>+ Teaches: {ITEM_INFO[model.kind].description}</div>
-      {model.stamps.map((s) => (
-        <div key={s.code} className={styles.plus}>
-          + Stamp: {s.label} {s.earned && <span className={styles.earned}>✓ earned</span>}
-        </div>
-      ))}
-      <div className={styles.use}>
-        <b>Use:</b> {model.use}
-      </div>
+      {model.stamps.length > 0 && (
+        <ul className={styles.stamps} aria-label="Stamps">
+          {model.stamps.map((s) => (
+            <li key={s.code} className={styles.stampMark} data-earned={s.earned}>
+              <span className={styles.stampSeal} aria-hidden="true">{s.earned ? "✓" : "?"}</span>
+              Stamp: {s.label}
+              {s.earned && <span className={styles["sr-only"]}> (earned)</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {children}
     </section>
   );
 }
@@ -161,36 +172,39 @@ function OneItem({ id, state, text, first }: { id: ItemId; state: AppState; text
       </div>
 
       <div className={styles.body}>
-        <Tooltip model={model} />
-
-        <section aria-label="How to use" className={styles.usage}>
-          <div className="kicker">02 / How to use it</div>
-          <ol className={styles.steps}>
-            {STEPS.map(([t, d], i) => (
-              <li key={t} className={`${styles.step} cutPanel`}>
-                <span className={styles.stepNum}>{i + 1}</span>
-                <strong>{t}</strong>
-                <span className={styles.stepText}>{d}</span>
-              </li>
-            ))}
-          </ol>
-          {text === null ? (
-            <p role="status">
-              This set is part of <Link href="/pro">Premium</Link>, arriving at launch.
-            </p>
-          ) : (
-            <div className={styles.actions}>
-              <CopyButton text={text} selectTargetId={preId} label="COPY ITEM" className={`${styles.primary} cut`} />
-              <Link className={`${styles.secondary} cut`} href="/console">
-                OPEN IN CONSOLE
-              </Link>
-              <Link className={`${styles.ghost} cut`} href="/guide">
-                USE IN YOUR OWN CLAUDE ↗
-              </Link>
-            </div>
-          )}
-          <p className="muted">{ITEM_INFO[model.kind].howTo}</p>
-        </section>
+        <Tooltip model={model}>
+          <div className={styles.use}>
+            <b>Use:</b> {model.use}
+          </div>
+          <section aria-label="How to use" className={styles.usage}>
+            <h2 className={styles.useTitle}>HOW TO USE IT</h2>
+            <ol className={styles.steps}>
+              {STEPS.map(([t, d], i) => (
+                <li key={t} className={styles.step}>
+                  <span className={styles.stepNum}>{i + 1}</span>
+                  <strong>{t}</strong>
+                  <span className={styles.stepText}>{d}</span>
+                </li>
+              ))}
+            </ol>
+            {text === null ? (
+              <p role="status">
+                This set is part of <Link href="/pro">Premium</Link>, arriving at launch.
+              </p>
+            ) : (
+              <div className={styles.actions}>
+                <CopyButton text={text} selectTargetId={preId} label="COPY ITEM" className={`${styles.primary} cut`} />
+                <Link className={`${styles.secondary} cut`} href="/console">
+                  OPEN IN CONSOLE
+                </Link>
+                <Link className={`${styles.ghost} cut`} href="/guide">
+                  USE IN YOUR OWN AI ↗
+                </Link>
+              </div>
+            )}
+            <p className={styles.howTo}>{ITEM_INFO[model.kind].howTo}</p>
+          </section>
+        </Tooltip>
 
         <div className={styles.lower}>
           {text !== null && <Peek state={state} id={id} textLength={text.length} />}
