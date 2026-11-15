@@ -40,7 +40,8 @@ function PremiumInner({ subscribed }: { subscribed: boolean }) {
   }
 
   return (
-    <>
+    <div className={styles.page}>
+      <div className={styles.inner}>
       <section className={styles.hero}>
         <div>
           <div className="kicker">05 / Premium · ${PRICE_USD_PER_MONTH} a month</div>
@@ -140,6 +141,7 @@ function PremiumInner({ subscribed }: { subscribed: boolean }) {
           </div>
         ))}
       </section>
-    </>
+      </div>
+    </div>
   );
 }
