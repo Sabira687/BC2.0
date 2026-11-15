@@ -184,6 +184,8 @@ export type ApplyResult =
       /** Items that became available (or need Pro) because of this result. */
       unlocked: ItemId[];
       newAchievements: AchievementId[];
+      /** True when the code was counted earlier: shown again, nothing added. */
+      alreadyCounted?: true;
     }
   | { ok: false; error: ResultCodeError; state: AppState };
 

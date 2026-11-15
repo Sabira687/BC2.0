@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAigo } from "@/lib/client/useAigo";
 import type { ApplyResult } from "@/lib/progress";
+import { withAlreadyCountedView } from "@/lib/resultview";
 import { ResultView } from "./ResultView";
 import styles from "./Result.module.css";
 
@@ -27,7 +28,7 @@ export function ResultFromUrl() {
     if (applied.current) return;
     applied.current = true;
     const code = typeof raw === "string" ? safeDecode(raw) : "";
-    setResult(actions.applyResultCode(code));
+    setResult(withAlreadyCountedView(actions.applyResultCode(code), code));
     window.history.replaceState(null, "", "/progress");
   }, [actions, raw]);
 

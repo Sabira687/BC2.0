@@ -201,3 +201,40 @@ describe("resultChips (from real state)", () => {
     expect(resultChips(partial).some((c) => c.text === "CONSTELLATION COMPLETE")).toBe(false);
   });
 });
+
+import { applyResultCode } from "./progress";
+import { encodeResultCode } from "./resultcode";
+import { withAlreadyCountedView } from "./resultview";
+
+describe("withAlreadyCountedView", () => {
+  it("shows the full result for an already counted code and leaves state alone", () => {
+    const s0 = createInitialState();
+    const tasks: TaskOutcomes = ["right", "right", "right", "pass", "pass"];
+    const code = encodeResultCode(s0.secrets, "m1", tasks, []);
+    const first = applyResultCode(s0, code);
+    if (!first.ok) throw new Error("fresh code must apply");
+    const again = applyResultCode(first.state, code);
+    expect(again).toMatchObject({ ok: false, error: "already_counted" });
+    const v = withAlreadyCountedView(again, code);
+    if (!v.ok) throw new Error("expected full view");
+    expect(v.state).toBe(first.state);
+    expect(v.state.resultsEntered).toBe(first.state.resultsEntered);
+    expect(v.result.score).toBe(first.result.score);
+    expect(v.result.stars).toBe(first.result.stars);
+    expect(v.result.tasks).toEqual(tasks);
+    expect(v.newStamps).toEqual([]);
+    expect(v.newAchievements).toEqual([]);
+    expect(v.alreadyCounted).toBe(true);
+  });
+  it("keeps foreign, malformed and fresh outcomes as they were", () => {
+    const s0 = createInitialState();
+    const other = createInitialState();
+    const foreign = encodeResultCode(other.secrets, "m1", ["right", "right", "right", "pass", "pass"], []);
+    for (const raw of [foreign, "garbage", ""]) {
+      const a = applyResultCode(s0, raw);
+      expect(withAlreadyCountedView(a, raw)).toBe(a);
+    }
+    const fresh = applyResultCode(s0, encodeResultCode(s0.secrets, "m1", ["right", "right", "right", "pass", "pass"], []));
+    expect(withAlreadyCountedView(fresh, "x")).toBe(fresh);
+  });
+});

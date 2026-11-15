@@ -12,6 +12,8 @@ import { lessonForTechnique, techniqueInfo } from "./progressview";
 import type { LessonRef } from "./content";
 import { ACHIEVEMENTS } from "./progress";
 import { setSky } from "./sky";
+import { decodeResultCode } from "./resultcode";
+import { testStars } from "./scoring";
 
 export interface TaskCheck {
   /** 1..5 */
@@ -161,4 +163,32 @@ export function resultChips(r: Extract<ApplyResult, { ok: true }>): ResultChip[]
   for (const c of r.newStamps) out.push({ tone: "green", text: `+ STAMP · ${techniqueInfo(c).short.toUpperCase()}` });
   for (const a of r.newAchievements) out.push({ tone: "blue", text: `MILESTONE · ${ACHIEVEMENTS[a].title.toUpperCase()}` });
   return out;
+}
+
+/**
+ * A code that is valid for this player but was already counted: the same full
+ * result view model, with nothing new claimed. State is returned unchanged.
+ * Any other outcome (errors, fresh codes) is passed through untouched.
+ */
+export function withAlreadyCountedView(applied: ApplyResult, raw: unknown): ApplyResult {
+  if (applied.ok || applied.error !== "already_counted") return applied;
+  const state = applied.state;
+  const decoded = decodeResultCode(raw, state.secrets);
+  if (!decoded.ok) return applied;
+  const d = decoded.result;
+  const best = state.results[d.module] ?? null;
+  const same = best && best.score === d.score;
+  const result = { module: d.module, tasks: d.tasks, score: d.score, stars: testStars(d.score), techniques: d.techniques, at: same ? best.at : new Date(0).toISOString() };
+  return {
+    ok: true,
+    state,
+    result,
+    previousBest: null,
+    newStamps: [],
+    isBest: !best || d.score >= best.score,
+    cleared: isPass(d.score),
+    unlocked: [],
+    newAchievements: [],
+    alreadyCounted: true,
+  };
 }

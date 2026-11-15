@@ -172,6 +172,7 @@ export function ResultView({ result }: { result: ApplyResult }) {
               <span className={`${styles.chip} ${styles.chipBlue}`}>✓ MADE FOR {state.profile.name.toUpperCase()}&apos;S ITEMS</span>
             </div>
           )}
+          {result.alreadyCounted && <p className={styles.siteNote} role="status">Already in your progress — nothing was added twice.</p>}
           {!isBest && previousBest && <p className={styles.siteNote}>Your best result is kept: {resultLine(previousBest)}.</p>}
         </section>
       </div>
