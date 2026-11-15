@@ -106,6 +106,7 @@
 .dotOn, .dotOn:hover:not(:disabled) { background: #00ffd1; color: #050611; }
 .stopBox { position: absolute; transform: translateX(-50%); width: 196px; border: 1px solid #12324a; background: #07101a; padding: 12px 14px; transition: border-color 0.4s; }
 .stopBoxOn { border-color: #00ffd1; }
+.stopBox:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 .stopTitle { font-family: var(--bar); font-weight: 700; font-size: 21px; text-transform: uppercase; }
 .stopText { margin-top: 6px; font-size: 14px; line-height: 1.45; color: #bfeff0; }
 .stopHidden { margin-top: 6px; font-family: var(--font-mono); font-size: 14px; line-height: 1.45; color: #5d8a9a; }

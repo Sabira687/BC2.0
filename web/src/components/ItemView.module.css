@@ -31,8 +31,8 @@
 .plus { color: #4ade80; }
 .earned { color: #86efac; }
 .use { margin-top: 10px; color: #6af7ff; }
-.lore { margin: 12px 0 0; color: #fcd34d; font-style: italic; }
-.flavor { margin: 6px 0 0; color: #9fb0cf; font-size: 14px; }
+.lore { position: relative; margin: 0 auto 6px; max-width: 46ch; color: #fcd34d; font-style: italic; }
+.flavor { position: relative; margin: 0 auto 12px; color: #9fb0cf; font-size: 14px; }
 
 .tuned { background: var(--sheet); border: 1px solid var(--line); padding: 16px 18px; }
 .tuned p, .tuned ul { margin: 0.4rem 0; }
@@ -59,7 +59,7 @@
 .pre { margin: 0; padding: 0 18px 18px; font-size: 12px; line-height: 1.6; color: #1e3a8a; white-space: pre-wrap; overflow-wrap: anywhere; }
 .empty { margin: 2rem 0; max-width: 560px; }
 
-.peek { margin: 0; }
+.peek { margin: 0; flex: 1 1 100%; }
 .peekBtn { font: inherit; font-family: var(--font-mono, monospace); font-size: 12px; letter-spacing: 0.08em; padding: 10px 16px; border: 1px solid var(--line); background: var(--sheet); cursor: pointer; }
 .peekBtn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 .peekPanel { margin-top: 10px; padding: 16px 18px; background: #14181f; color: #d7e0ea; font-family: var(--font-mono, monospace); font-size: 12px; line-height: 1.6; }

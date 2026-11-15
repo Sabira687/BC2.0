@@ -11,6 +11,7 @@ import { kindOf, setBadgeSteps } from "@/lib/progress";
 import type { AppState, ItemId } from "@/lib/types";
 import { Card } from "@/components/ui";
 import { RevealOverlay, type RevealCard } from "./RevealOverlay";
+import { PageFooter } from "./PageFooter";
 import styles from "./CollectionView.module.css";
 
 const KIND_NAME = { learn: "LEARN", test: "TEST", help: "HELP" } as const;
@@ -400,7 +401,10 @@ export function CollectionView() {
         </>
       )}
 
-      <p className={styles.more}>MORE KINDS OF ITEMS ARE ON THE WAY · YOUR ITEMS WAIT FOR YOU</p>
+      <PageFooter meta="MORE KINDS OF ITEMS ARE ON THE WAY · YOUR ITEMS WAIT FOR YOU">
+        <Link href="/progress">Your progress</Link>
+        <Link href="/pro">See Premium</Link>
+      </PageFooter>
 
       {reveal && (
         <RevealOverlay

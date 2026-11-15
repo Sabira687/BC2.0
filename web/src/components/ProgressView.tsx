@@ -8,6 +8,7 @@ import { PRICE_USD_PER_MONTH } from "@/lib/generator";
 import { stampPassport, whatYouCanDo } from "@/lib/progressview";
 import { setSky, skyNeighbours } from "@/lib/sky";
 import { Stamp } from "@/components/ui";
+import { PageFooter } from "./PageFooter";
 import { ResultView } from "./ResultView";
 import { demoResultView } from "@/lib/resultview";
 import { ResultCodeForm } from "./ResultCodeForm";
@@ -176,20 +177,15 @@ export function ProgressView() {
         </div>
       </section>
 
-      <section className={styles.foot}>
-        <span>
-          Player ID {state.secrets.playerId} · Project: {program.project.title}
-        </span>
-        <span>
-          {state.subscription.active ? "Premium is active (test mode)." : `Demo: Set 01. Sets 02–07 are free at launch; Premium ($${PRICE_USD_PER_MONTH}/month) adds the advanced paths.`}{" "}
-          <Link href="/pro">{state.subscription.active ? "Manage" : "See Premium"}</Link>
-        </span>
+      <PageFooter
+        meta={`PLAYER ID ${state.secrets.playerId} · PROJECT: ${program.project.title}`}
+        note={state.subscription.active ? "Premium is active (test mode)." : `Demo: Set 01. Sets 02–07 are free at launch; Premium ($${PRICE_USD_PER_MONTH}/month) adds the advanced paths.`}
+      >
+        <Link href="/pro">{state.subscription.active ? "Manage" : "See Premium"}</Link>
         <Link href="/start">Edit answers</Link>
         <Link href="/console">Start your lesson with Claude</Link>
-        <button type="button" className="secondary" onClick={onReset}>
-          Reset progress
-        </button>
-      </section>
+        <button type="button" onClick={onReset}>Reset progress</button>
+      </PageFooter>
     </div>
   );
 }

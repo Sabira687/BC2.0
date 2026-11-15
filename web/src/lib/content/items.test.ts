@@ -11,7 +11,7 @@ describe("item content", () => {
       expect(ITEMS.m1![k].rarity).toBe("common");
       expect(ITEMS.m1![k].lore.length).toBeGreaterThan(40);
     }
-    expect(ITEMS.m1!.learn.lore).toMatch(/^Forged for doors/);
+    expect(ITEMS.m1!.learn.lore).toMatch(/^Cut for doors/);
   });
   it("rarity and tier by set number", () => {
     expect([1, 2, 3].map(rarityOfSet)).toEqual(["common", "common", "common"]);

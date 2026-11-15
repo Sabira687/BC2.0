@@ -70,7 +70,7 @@ function Hero({ reduced }: { reduced: boolean }) {
         </nav>
       </header>
       <div className={styles.heroBody}>
-        <div className={styles.kicker}>&gt; COLLECTIBLE CARDS THAT TURN YOUR AI INTO YOUR COACH<span className={styles.blink}>_</span></div>
+        <div className={styles.kicker}>&gt; COLLECTIBLE CARDS FOR YOUR AI<span className={styles.blink}>_</span></div>
         <h1 className={styles.display}>
           <span className={styles.glitch} data-text="Collect.">Collect.</span>
           <br />
@@ -81,8 +81,8 @@ function Hero({ reduced }: { reduced: boolean }) {
         <div className={styles.heroCta}>
           <Link href="/start" className={styles.cta}>Start your collection ▸</Link>
           <p>
-            Every card is a digital item with its own story. Paste it into Claude and the AI becomes your coach for one skill, on your real work.
-            Stars and stamps come only when Claude checks what you did.
+            Every card in your collection is a digital item with its own story and use. Paste it into your AI and it adapts to you.
+            Earn stars and stamps to unlock new cards and grow your collection.
           </p>
         </div>
       </div>
@@ -124,8 +124,8 @@ function Items() {
           <div className={`${styles.eyebrow} ${styles.pink}`}>02 / THE VAULT</div>
           <h2 className={styles.h2}>Every item<br /><span className={styles.holoText}>has a story.</span></h2>
           <p className={styles.lead}>
-            A card is not a lesson file. It&apos;s an item: its own art, a short story that helps the skill stick, a rarity and a number in its set.
-            Inside sit hidden instructions only your AI reads.
+            Each card is a unique item that helps you gain a new skill and real experience. Cards differ in rarity and come in sets.
+            Inside are hidden instructions your AI reads to adapt to you.
           </p>
           <div className={styles.panel} style={{ borderColor: p.accent }} aria-live="polite">
             <div className={styles.panelTag} style={{ color: p.accent }}>{p.tag}</div>
@@ -187,7 +187,7 @@ function PathSection({ reduced }: { reduced: boolean }) {
                       {s.n}
                     </button>
                   </div>
-                  <div className={`${styles.stopBox} ${on ? styles.stopBoxOn : ""}`} style={{ left: `${s.x / 10}%`, top: `${(below ? s.y + 40 : s.y - 180) / 4.4}%` }}>
+                  <div className={`${styles.stopBox} ${on ? styles.stopBoxOn : ""}`} role="group" tabIndex={0} aria-label={`Step ${s.n}: ${s.title}`} aria-current={on ? "step" : undefined} onMouseEnter={pick} onFocus={pick} style={{ left: `${s.x / 10}%`, top: `${(below ? s.y + 40 : s.y - 180) / 4.4}%` }}>
                     <div className={styles.stopTitle}>{s.title}</div>
                     <div className={on ? styles.stopText : styles.stopHidden}>{on ? s.text : "▒▒▒▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒▒▒"}</div>
                   </div>
@@ -236,10 +236,10 @@ export function LandingView() {
           <div className={styles.ideaText}>
             <div className={styles.eyebrowDark}>THE IDEA</div>
             <h2 className={styles.h2}>The best teacher<br />for the AI is the AI.</h2>
-            <p className={styles.built}>BUILT FOR: people who know AI matters and don&apos;t know where to start.</p>
+            <p className={styles.built}>BUILT FOR: people who know AI matters and don&apos;t know where to start. Start with the AI itself.</p>
             <p className={styles.ideaP}>
               AIGO is a collection of digital items. Each card has a story and a power: the Key teaches, the Lock tests, the Compass helps you mid-task.
-              Paste a card into the AIGO lesson or into your own Claude, and the AI becomes your coach for that skill. Collect the set, earn the stamps,
+              Paste a card into your AI and it teaches you a new skill on your real work. Earn stars and stamps to unlock the next cards, collect the set,
               keep every card.
             </p>
           </div>
@@ -273,14 +273,13 @@ export function LandingView() {
           <div className={`${styles.eyebrow} ${styles.pink}`}>05 / THE GOOD PARTS ONLY</div>
           <h2 className={styles.h2}>We kept the magic.<br /><span className={styles.pink}>We left the guilt.</span></h2>
           <p className={styles.keptLead}>
-            We grew up collecting, and some of us learned real skills while we did it. Neopets taught a generation HTML. AIGO takes the parts of old
-            games that felt like magic and points them at the skill that matters at work now.
+            AIGO uses a few game mechanics that make collecting feel good — and leaves out the ones that make you feel guilty.
           </p>
           <div className={styles.keptRow}>
             <div className={styles.keptGrid}>
               {KEPT.map((k) => (
                 <div key={k.name} className={styles.keptCell}>
-                  <div className={styles.keptFrom}>KEPT · {k.from}</div>
+                  <div className={styles.keptFrom}>KEPT</div>
                   <div className={styles.keptName}>{k.name}</div>
                   <div>{k.text}</div>
                 </div>
@@ -304,7 +303,7 @@ export function LandingView() {
             <div className={styles.demoBox}>
               <span>IN THIS DEMO</span>
               <br />
-              Set 01 of the Free plan: 3 cards, the AIGO lesson, Work chat, stars, stamps and result codes. Premium checkout runs in test mode.
+              Set 01 of the Free plan: 3 cards, the AIGO lesson, Work chat, stars, stamps and result codes. Premium checkout runs in test mode. The live AI in this demo console runs on our API key — for the demo only. In the real app, lessons run on your own AI.
             </div>
           </div>
           <div className={styles.tickets}>
@@ -323,6 +322,7 @@ export function LandingView() {
           <div className={`${styles.eyebrow} ${styles.cyan}`}>07 / ROADMAP</div>
           <h2 className={styles.h2}>Big plan.<br /><span className={styles.blue}>Real parts.</span></h2>
           <p className={styles.keptLead}>The demo is the core of the whole product, working today. Everything after it reuses the same parts.</p>
+          <p className={styles.keptLead}>The live AI in this demo console runs on our API key — for the demo only. In the real app, lessons run on your own AI.</p>
           <div className={styles.roadGrid}>
             {ROADMAP.map((c) => (
               <div key={c.tag} className={styles.roadCol}>

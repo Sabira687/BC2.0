@@ -32,8 +32,8 @@ export default function GuidePage() {
         <div className={`${styles.panel} cutPanel`}>
           <div className="kicker" style={{ color: "var(--learn)" }}>TWO WAYS TO LEARN</div>
           {GUIDE_WAYS.map((w) => (
-            <div key={w.name} className={styles.way}>
-              <strong>{w.name}</strong> {w.recommended && <span className={styles.rec}>RECOMMENDED</span>}
+            <div key={w.name} className={`${styles.way} ${w.recommended ? styles.muted : ""}`}>
+              <strong>{w.name}</strong>
               <p>{w.note}</p>
             </div>
           ))}
@@ -44,7 +44,7 @@ export default function GuidePage() {
         </div>
         <div className={styles.check}>
           <div className="kicker" style={{ fontSize: 11 }}>SETUP CHECKLIST</div>
-          <ul>{GUIDE_CHECKLIST.map((c) => <li key={c}>[ ] {c}</li>)}</ul>
+          <ol>{GUIDE_CHECKLIST.map((c) => <li key={c}>{c}</li>)}</ol>
         </div>
         <div className={styles.premium}>
           <div className="kicker" style={{ color: "#b45309", fontSize: 11 }}>{GUIDE_CONNECTOR.kicker}</div>

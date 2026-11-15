@@ -6,7 +6,7 @@ import { itemPageModel, type ItemPageModel } from "@/lib/itempage";
 import { itemSummary } from "@/lib/generator";
 import { peekItem } from "@/lib/peek";
 import { collection, kindOf, moduleOfItem } from "@/lib/progress";
-import type { AppState, ItemId, ItemKind, Profile } from "@/lib/types";
+import type { AppState, ItemId, ItemKind } from "@/lib/types";
 import { Stars } from "@/components/ui";
 import { ItemArt } from "@/components/ui/ItemArt";
 import { CopyButton } from "./CopyButton";
@@ -16,11 +16,10 @@ import styles from "./ItemView.module.css";
 const STEPS: [string, string][] = [
   ["Copy the item", "A short block of text with the lessons inside."],
   ["Paste into a new chat", "In the AIGO console or in your own Claude."],
-  ["Look for ▶ ITEM ACTIVATED", "Claude is now your coach. Stars come when it checks your work."],
+  ["Look for ▶ ITEM ACTIVATED", "Your AI switches to the card's mode. Stars come when it checks your work."],
 ];
 
-function Tooltip({ model, id, profile }: { model: ItemPageModel; id: ItemId; profile: Profile }) {
-  const flavor = itemSummary(profile, moduleOfItem(id), kindOf(id)).flavor;
+function Tooltip({ model }: { model: ItemPageModel }) {
   return (
     <section aria-label="Item stats" className={`${styles.tooltip} cutPanel`} data-kind={model.kind}>
       <div className={styles.tipHead}>
@@ -49,8 +48,6 @@ function Tooltip({ model, id, profile }: { model: ItemPageModel; id: ItemId; pro
       <div className={styles.use}>
         <b>Use:</b> {model.use}
       </div>
-      {model.lore && <p className={styles.lore}>“{model.lore}”</p>}
-      {flavor && <p className={styles.flavor}>{flavor}</p>}
     </section>
   );
 }
@@ -135,6 +132,7 @@ function Peek({ state, id, textLength }: { state: AppState; id: ItemId; textLeng
 
 function OneItem({ id, state, text, first }: { id: ItemId; state: AppState; text: string | null; first: boolean }) {
   const model = itemPageModel(state, id);
+  const flavor = itemSummary(state.profile, moduleOfItem(id), kindOf(id)).flavor;
   const Heading = first ? "h1" : "h2";
   const preId = `item-text-${id.replace(":", "-")}`;
   return (
@@ -154,6 +152,8 @@ function OneItem({ id, state, text, first }: { id: ItemId; state: AppState; text
         </div>
         <div className={styles.shadow} aria-hidden="true" />
         <Heading className={styles.name}>{model.name}</Heading>
+        {model.lore && <p className={styles.lore}>“{model.lore}”</p>}
+        {flavor && <p className={styles.flavor}>{flavor}</p>}
         <div className={styles.badges}>
           <span className={styles.rarity}>{model.rarityLabel}</span>
           {model.stars !== null && <Stars value={model.stars} size={18} showText />}
@@ -161,8 +161,7 @@ function OneItem({ id, state, text, first }: { id: ItemId; state: AppState; text
       </div>
 
       <div className={styles.body}>
-        <Tooltip model={model} id={id} profile={state.profile} />
-        {text !== null && <Peek state={state} id={id} textLength={text.length} />}
+        <Tooltip model={model} />
 
         <section aria-label="How to use" className={styles.usage}>
           <div className="kicker">02 / How to use it</div>
@@ -194,6 +193,7 @@ function OneItem({ id, state, text, first }: { id: ItemId; state: AppState; text
         </section>
 
         <div className={styles.lower}>
+          {text !== null && <Peek state={state} id={id} textLength={text.length} />}
           <section aria-label="Quest log" className={styles.quest}>
             <div className="kicker">Quest log · {model.kind === "learn" ? "lessons inside" : model.kind === "test" ? "your test" : "your help"}</div>
             <ul className={styles.questList}>

@@ -98,14 +98,14 @@ function pick<T extends string>(options: readonly Option<T>[], raw: unknown, dem
 
 /**
  * Validate untrusted questionnaire input (form data or stored JSON).
- * With `demoLock`, options marked `enabled: false` are rejected, and everything except the name and the style
- * is pinned to the demo values (job and age are taken from JOHN).
+ * With `demoLock`, options marked `enabled: false` are rejected, and everything except the style
+ * is pinned to the demo values (name, job and age are taken from JOHN).
  */
 export function validateProfile(input: unknown, { demoLock = false }: { demoLock?: boolean } = {}): ProfileResult {
   const r = (typeof input === "object" && input !== null ? input : {}) as Record<string, unknown>;
   const errors: ProfileErrors = {};
 
-  const name = checkName(r.name);
+  const name = demoLock ? JOHN.name : checkName(r.name);
   if (!name) errors.name = "Enter a name (letters only, up to 24).";
   const age = demoLock ? JOHN.age : parseAge(r.age);
   if (age === null) errors.age = "Enter an age from 16 to 99.";

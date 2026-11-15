@@ -45,3 +45,22 @@ export function revealSequence(count: number): RevealEvent[] {
   out.push({ at: count * COMPACT_CARD_MS, index: count - 1, phase: "done" });
   return out;
 }
+
+export interface Spark {
+  angle: number;
+  dist: number;
+  size: number;
+  delay: number;
+  star: boolean;
+}
+
+/** Deterministic spark layout (no randomness): `count` sparks fanned around the card. */
+export function sparkLayout(count: number): Spark[] {
+  return Array.from({ length: count }, (_, i) => ({
+    angle: Math.round((i * 360) / count + (i % 2) * 9),
+    dist: 90 + ((i * 37) % 5) * 22,
+    size: 6 + ((i * 5) % 4) * 3,
+    delay: (i % 4) * 40,
+    star: i % 3 === 0,
+  }));
+}

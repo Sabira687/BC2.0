@@ -8,6 +8,11 @@
  * The older internal-id form (`m1.2 …`, `m1 · task …`) is still read, so stored transcripts keep working.
  * Parsing is tolerant (the bar glyph, spacing and case vary between replies).
  */
+/** Small honest line under the terminal header (Lesson and Work chat views). */
+export const API_KEY_NOTE = "The live AI in this demo console runs on our API key — for the demo only. In the real app, lessons run on your own AI.";
+/** Plaque above the "Not sure what to write?" panel. */
+export const DEMO_HELPER_NOTE = "DEMO HELPER · ready answers let you try the full path in minutes. In the real app you write your own.";
+
 import type { AppState, Hint, LessonId, ModuleId } from "./types";
 import { STEPS } from "./types";
 import type { ChatMessage } from "./chat";

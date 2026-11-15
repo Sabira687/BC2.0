@@ -22,7 +22,7 @@ export const ITEM_PANELS: readonly ItemPanel[] = [
     accent: "#6AF7FF",
     tag: "ITEM · LEARN · SET 01 · 1/3 · ● COMMON",
     name: "Three-Tooth Key",
-    lore: "Forged for doors that never open on the first knock. Its three teeth are who you are, what you need and how it should look. Miss one and the lock just spins.",
+    lore: "Cut for doors that won't open on the first knock. Three teeth: who you are, what you need, how it should look. Get all three right and the door opens.",
     teach: "Teaches: write an ask the AI gets right the first time. 3 lessons on your work, ~10 min.",
   },
   {
@@ -51,7 +51,7 @@ export const ITEM_PANELS: readonly ItemPanel[] = [
     tag: "ITEM · ??? · SET 12 · ★ LEGENDARY · PREMIUM",
     name: "Locked item",
     lore: "You'll see it later.",
-    teach: "Part of the Automator path: Claude Code, agents and connectors.",
+    teach: "Part of the Automator path: coding agents, agents and connectors.",
   },
 ];
 
@@ -67,45 +67,45 @@ export interface PathStop {
 export const PATH_STOPS: readonly PathStop[] = [
   { n: "01", title: "You answer", text: "One minute: your job, your goal, how you like to learn.", x: 120, y: 320 },
   { n: "02", title: "Open your cards", text: "Set 01 is made for you: the Key, the Lock and the Compass, each revealed in its pocket.", x: 315, y: 130 },
-  { n: "03", title: "Activate", text: "Paste a card into the AIGO lesson or your own Claude. It answers ▶ ITEM ACTIVATED and becomes your coach.", x: 500, y: 300 },
-  { n: "04", title: "Learn on real work", text: "Short lessons with your emails and reports. A star or a stamp only when Claude checks the result.", x: 685, y: 140 },
+  { n: "03", title: "Activate", text: "Paste a card into your AI. It answers ▶ ITEM ACTIVATED and switches to the card's mode: a lesson, a test or a quick tip.", x: 500, y: 300 },
+  { n: "04", title: "Learn on real work", text: "Short lessons with your emails and reports. A star or a stamp only when your AI checks the result.", x: 685, y: 140 },
   { n: "05", title: "Prove it", text: "The Lock: five tasks on your work. 90+ makes the card holographic; a result code brings it home.", x: 880, y: 260 },
 ];
 
 export const BENEFITS: readonly string[] = [
   "every card is an item: its own art, story, rarity and number",
   "lessons on your real work: emails, reports, meeting notes",
-  "stars and stamps only when Claude checks what you did",
+  "stars and stamps only when your AI checks what you did",
   "a stamp book that reads like a list of what you can do",
   "help mid-task: one better move, then back to work",
-  "starts in your browser, then works in your own Claude",
+  "starts in your browser, then works with your own AI",
   "nothing expires: no streaks, no timers, no lectures",
 ];
 
-export const KEPT: readonly { from: string; name: string; text: string }[] = [
-  { from: "POKÉMON TCG, HEARTHSTONE", name: "Pack openings", text: "A card reveal, with nothing random" },
-  { from: "HEARTHSTONE GOLDEN CARDS", name: "Holo foils", text: "Earned for mastery: 90+ on the test" },
-  { from: "TRADING CARDS", name: "Rarity and set numbers", text: "● ◆ ★ show how deep a skill goes" },
-  { from: "CLUB PENGUIN", name: "Stamp books", text: "Each stamp is a skill you used" },
-  { from: "WEBKINZ, CHEAT CODES", name: "Secret codes", text: "Result codes bring progress home" },
-  { from: "POKÉDEX", name: "“???” silhouettes", text: "You see what's ahead" },
+export const KEPT: readonly { name: string; text: string }[] = [
+  { name: "Pack openings", text: "A card reveal, with nothing random" },
+  { name: "Holo foils", text: "Earned for mastery: 90+ on the test" },
+  { name: "Rarity and set numbers", text: "● ◆ ★ show how deep a skill goes" },
+  { name: "Stamp books", text: "Each stamp is a skill you used" },
+  { name: "Secret codes", text: "Result codes bring progress home" },
+  { name: "“???” silhouettes", text: "You see what's ahead" },
 ];
 
 export const LEFT_BEHIND: readonly string[] = ["Streaks and daily guilt", "Random loot boxes", "Timers and energy", "Leaderboards", "In-app coins"];
 
 export const FREE_TICKET: readonly { bold?: string; text: string }[] = [
   { bold: "Core path:", text: "7 skills, 21 cards" },
-  { text: "Lessons in AIGO and in your own Claude" },
+  { text: "Lessons in AIGO and in your own AI" },
   { text: "Stars, stamp book, set badges, holo cards" },
-  { text: "Result codes from your own Claude" },
-  { text: "Cards updated when Claude changes" },
+  { text: "Result codes from your own AI" },
+  { text: "Cards updated when AI models change" },
 ];
 
 export const PREMIUM_TICKET: readonly { bold?: string; text: string }[] = [
   { text: "Everything in Free" },
-  { bold: "AIGO Connector", text: "for Claude: your collection inside Claude, progress saves itself" },
+  { bold: "AIGO Connector", text: "for your AI: your collection inside your AI, progress saves itself" },
   { bold: "Full path:", text: "Power user and Automator, 24 more ★ Legendary cards" },
-  { bold: "New cards every month", text: ", after each Claude release" },
+  { bold: "New cards every month", text: ", after each major AI release" },
   { bold: "Promotion Kit:", text: "your proven skills on one page for your manager" },
   { text: "Priority support" },
 ];
@@ -123,22 +123,22 @@ export const ROADMAP: readonly RoadmapColumn[] = [
     tag: "NOW",
     title: "This demo",
     color: "#6AF7FF",
-    items: ["Set 01: Key, Lock, Compass", "AIGO lesson on the Claude API", "Work chat with the Help card", "Stars, stamps, result codes", "Premium checkout in test mode"],
+    items: ["Set 01: Key, Lock, Compass", "Live AIGO demo lesson", "Work chat with the Help card", "Stars, stamps, result codes", "Premium checkout in test mode"],
     why: "Live today. Try it as John.",
   },
   {
     tag: "NEXT",
     title: "Free at launch",
     color: "#3B82FF",
-    items: ["Sets 02–07: the core path", "21 cards with their own art and stories", "Card updates when Claude changes"],
+    items: ["Sets 02–07: the core path", "21 cards with their own art and stories", "Card updates when AI models change"],
     why: "Same lesson and test templates. New sets are writing, not new code.",
   },
   {
     tag: "THEN",
     title: "Premium",
     color: "#FF8AD9",
-    items: ["AIGO Connector for Claude", "Power user and Automator paths", "Monthly card drops", "Promotion Kit, priority support"],
-    why: "The connector is an MCP server: Claude already supports custom connectors, even on the free plan. The Kit exports data AIGO already stores.",
+    items: ["AIGO Connector for your AI", "Power user and Automator paths", "Monthly card drops", "Promotion Kit, priority support"],
+    why: "The connector is an MCP server: major AIs already support custom connectors. The Kit exports data AIGO already stores.",
   },
 ];
 
@@ -163,10 +163,10 @@ export const PLAN_COLUMNS: readonly PlanColumn[] = [
     price: null,
     rows: [
       { title: "Set 01 · The Clear Ask: Key, Lock, Compass" },
-      { title: "The AIGO lesson on the Claude API" },
+      { title: "The live AIGO demo lesson" },
       { title: "Work chat with the Help card" },
       { title: "Stars, stamps, set badge, holo card" },
-      { title: "Result codes from your own Claude" },
+      { title: "Result codes from your own AI" },
       { title: "Premium checkout in test mode" },
     ],
   },
@@ -176,9 +176,9 @@ export const PLAN_COLUMNS: readonly PlanColumn[] = [
     price: "$0",
     rows: [
       { title: "Core path: 7 skills, 21 cards", why: "Sets 01–07, each with its own items and stories" },
-      { title: "Lessons in AIGO and in your own Claude" },
+      { title: "Lessons in AIGO and in your own AI" },
       { title: "Stamp book, set badges, holo cards" },
-      { title: "Card updates when Claude changes" },
+      { title: "Card updates when AI models change" },
     ],
     footnote: "Same lesson and test templates as Set 01: new sets are writing, not new code.",
   },
@@ -187,9 +187,9 @@ export const PLAN_COLUMNS: readonly PlanColumn[] = [
     heading: "The full path",
     price: `$${PRICE_USD_PER_MONTH}`,
     rows: [
-      { title: "AIGO Connector for Claude", why: "an MCP server; Claude supports custom connectors on every plan" },
+      { title: "AIGO Connector for your AI", why: "an MCP server; major AIs support custom connectors" },
       { title: "Full path: Power user + Automator", why: "24 more cards in the same format as Set 01" },
-      { title: "New cards every month", why: "a content release timed to Claude's updates" },
+      { title: "New cards every month", why: "a content release timed to AI model updates" },
       { title: "Promotion Kit", why: "one page of stamps, scores and work samples AIGO already stores" },
       { title: "Priority support", why: "Email, reply within a day" },
     ],
@@ -205,7 +205,7 @@ export function planTicketTitle(c: PlanColumn): string {
 
 export const PATH_TILES: readonly { title: string; sets: string; first: number; skills: readonly string[] }[] = [
   { title: "Power user path", sets: "SETS 08–11", first: 8, skills: ["Artifacts", "Research", "Files & data", "Skills"] },
-  { title: "Automator path", sets: "SETS 12–15", first: 12, skills: ["Claude Code", "Agents", "Connectors", "Automations"] },
+  { title: "Automator path", sets: "SETS 12–15", first: 12, skills: ["Coding agents", "Agents", "Connectors", "Automations"] },
 ];
 
 export const PROMISES: readonly { title: string; text: string }[] = [

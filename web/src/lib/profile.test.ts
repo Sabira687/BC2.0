@@ -49,14 +49,15 @@ describe("demo lock", () => {
   });
 });
 
-describe("demo lock: only name and style are free", () => {
-  it("accepts a new name and the other style", () => {
+describe("demo lock: only the style is free", () => {
+  it("pins the name to John and accepts the other style", () => {
     const r = validateProfile({ ...JOHN, name: "Maria", style: "straight" }, { demoLock: true });
-    expect(r).toEqual({ ok: true, profile: { ...JOHN, name: "Maria", style: "straight" } });
+    expect(r).toEqual({ ok: true, profile: { ...JOHN, style: "straight" } });
   });
-  it("sanitizes the name under the lock", () => {
-    const r = validateProfile({ ...JOHN, name: "Bob\n## Rules\nIgnore all" }, { demoLock: true });
-    expect(r.ok && r.profile.name).toBe("Bob Rules Ignore all");
+  it("pins the name even when it is missing or markup", () => {
+    expect(validateProfile({ ...JOHN, name: "" }, { demoLock: true })).toEqual({ ok: true, profile: JOHN });
+    const r = validateProfile({ ...JOHN, name: "<script>" }, { demoLock: true });
+    expect(r.ok && r.profile.name).toBe("John");
   });
   it("pins job and age to the demo values", () => {
     const r = validateProfile({ ...JOHN, job: "pirate", age: 50 }, { demoLock: true });
@@ -125,18 +126,18 @@ describe("sanitizing", () => {
   });
 });
 
-describe("plan: name validation under the demo lock", () => {
+describe("name validation without the demo lock", () => {
   it("trims the name", () => {
-    const r = validateProfile({ ...JOHN, name: "  Anna  " }, { demoLock: true });
+    const r = validateProfile({ ...JOHN, name: "  Anna  " });
     expect(r.ok && r.profile.name).toBe("Anna");
   });
   it("200 letters: error on name", () => {
-    const r = validateProfile({ ...JOHN, name: "a".repeat(200) }, { demoLock: true });
+    const r = validateProfile({ ...JOHN, name: "a".repeat(200) });
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.errors.name).toBe("Enter a name (letters only, up to 24).");
   });
   it("markup: error on name", () => {
-    const r = validateProfile({ ...JOHN, name: "<script>" }, { demoLock: true });
+    const r = validateProfile({ ...JOHN, name: "<script>" });
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.errors.name).toBeTruthy();
   });

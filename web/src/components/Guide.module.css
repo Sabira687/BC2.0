@@ -24,6 +24,9 @@
 .panel { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--learn); padding: 18px; }
 .way { margin-top: 10px; padding: 10px 0 0; border-top: 1px dashed var(--line); }
 .way p { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
+.muted, .muted p, .muted strong { color: #6b7280; }
+.muted { opacity: 0.9; }
+.check ol { list-style: decimal; margin: 6px 0 0; padding-left: 22px; line-height: 2; }
 .rec { font-family: var(--font-mono); font-size: 10.5px; color: var(--pass); }
 .links { display: flex; gap: 8px; margin-top: 12px; }
 .btn { display: inline-block; background: var(--learn); color: #fff; text-decoration: none; font-family: var(--font-display); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px 16px; }

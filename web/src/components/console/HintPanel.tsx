@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PLAIN_CHECKLIST, type ConsoleHint } from "@/lib/console";
+import { DEMO_HELPER_NOTE, PLAIN_CHECKLIST, type ConsoleHint } from "@/lib/console";
 import type { ApplyResult } from "@/lib/progress";
 import { CopyButton } from "../CopyButton";
 import { ResultView } from "../ResultView";
@@ -39,6 +39,8 @@ export function HintPanel({
 }) {
   const code = hint.resultCode;
   return (
+    <>
+    <p className={styles.helperPlaque} data-testid="demo-helper-plaque">{DEMO_HELPER_NOTE}</p>
     <section className={styles.sideCard} data-kind={hint.status?.kind === "test" ? "test" : "learn"} aria-labelledby="hint-title">
       <h2 id="hint-title" className={styles.eyebrow} data-kind="learn" style={{ margin: 0, fontWeight: 400 }}>
         Not sure what to write?
@@ -85,5 +87,6 @@ export function HintPanel({
         </div>
       )}
     </section>
+    </>
   );
 }

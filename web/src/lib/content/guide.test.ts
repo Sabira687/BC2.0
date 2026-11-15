@@ -7,9 +7,10 @@ describe("guide content", () => {
     expect(new Set(GUIDE_STEPS.map((s) => s.visual)).size).toBe(6);
     for (const s of GUIDE_STEPS) expect(s.title && s.text && s.tag).toBeTruthy();
   });
-  it("has two ways to learn (own Claude recommended), a checklist and the Premium connector", () => {
+  it("has two ways to learn (own AI, muted, not needed for the demo), a checklist and the Premium connector", () => {
     expect(GUIDE_WAYS).toHaveLength(2);
-    expect(GUIDE_WAYS.filter((w) => w.recommended).map((w) => w.name)).toEqual(["Your own Claude"]);
+    expect(GUIDE_WAYS.filter((w) => w.recommended).map((w) => w.name)).toEqual(["Your own AI"]);
+    expect(GUIDE_WAYS[0].note).toBe("for real users · not needed for this demo");
     expect(GUIDE_CHECKLIST).toHaveLength(5);
     expect(GUIDE_CONNECTOR.kicker).toMatch(/PREMIUM/);
   });

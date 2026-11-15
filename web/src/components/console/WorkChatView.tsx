@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { useAigo } from "@/lib/client/useAigo";
 import { WORKCHAT_KEY } from "@/lib/conversation";
-import { lastStatus } from "@/lib/console";
+import { API_KEY_NOTE, lastStatus } from "@/lib/console";
 import { captureNotices, gainFor } from "@/lib/notices";
 import type { Captured } from "@/lib/capture";
 import { activeCard, cardView, helpUsedSeen } from "@/lib/markers";
@@ -101,6 +101,7 @@ export function WorkChatView() {
             {chat.busy ? "Claude is writing…" : chat.error ? "Claude couldn't answer. Try again below." : "Claude is ready"}
           </p>
         </div>
+        <p className={styles.keyNote}>{API_KEY_NOTE}</p>
         <div className={styles.toolbar}>
           {loadSampleButton}
           <button type="button" className="secondary" onClick={onStartOver} disabled={messages.length === 0 && !chat.busy}>

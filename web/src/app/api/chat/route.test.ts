@@ -22,7 +22,7 @@ function req(signal?: AbortSignal) {
   });
 }
 
-const RESTING = "The live coach is resting. Copy an item from your collection into your own Claude: it works the same.";
+const RESTING = "The live AI is resting. Copy an item from your collection into your own AI: it works the same.";
 
 describe("POST /api/chat", () => {
   beforeEach(() => { vi.resetModules(); vi.spyOn(console, "info").mockImplementation(() => {}); vi.spyOn(console, "error").mockImplementation(() => {}); });

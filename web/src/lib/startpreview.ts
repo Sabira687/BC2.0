@@ -23,6 +23,6 @@ export function firstReply(style: Style, rawName: string, module: ModuleId = "m1
   const text =
     style === "straight"
       ? `${name}. ${mod.title}: ${lessons} on your own work. ${ask}`
-      : `Hi ${name}! I'm your coach for ${mod.title}. ${lessons} on your own work, and I'll explain why each step matters. ${ask}`;
+      : `Hi ${name}! I'll teach you a new skill: ${mod.title}. ${lessons} on your own work, and I'll explain why each step matters. ${ask}`;
   return { styleLabel: tone.label, text, rule: tone.rules[0] ?? "" };
 }

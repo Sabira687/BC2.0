@@ -3,11 +3,10 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Stamp } from "@/components/ui";
 import { firstReply } from "@/lib/startpreview";
-import { inkGreeting, isNameEdited, nameTag } from "@/lib/startsheet";
+import { inkGreeting } from "@/lib/startsheet";
 import styles from "./StartForm.module.css";
 import { useAigo } from "@/lib/client/useAigo";
-import { checkName, greetingName, validateProfile, type ProfileErrors } from "@/lib/profile";
-import { NAME_MAX } from "@/lib/sanitize";
+import { JOHN, validateProfile, type ProfileErrors } from "@/lib/profile";
 import type { Profile } from "@/lib/types";
 
 type StyleChoice = "mentor" | "straight";
@@ -19,8 +18,8 @@ const STICKERS: { value: StyleChoice; name: string; sub: string; rot: number }[]
 
 const BENEFITS: [string, string][] = [
   ["Items made for your job", "Examples from your work, in the tone you picked."],
-  ["Learn inside your own Claude", "No new app to live in. Paste an item, start learning."],
-  ["Proof, not points", "Stars and stamps only when Claude checks your work."],
+  ["Learn inside your own AI", "No new app to live in. Paste an item, start learning."],
+  ["Proof, not points", "Stars and stamps only when your AI checks your work."],
   ["Nothing expires", "No streaks, no timers. Come back whenever you like."],
 ];
 
@@ -76,20 +75,12 @@ export function StartForm() {
 function StartFormInner({ initial }: { initial: Profile }) {
   const { actions } = useAigo();
   const router = useRouter();
-  const [name, setName] = useState(initial.name);
   const [style, setStyle] = useState<StyleChoice>(initial.style === "straight" ? "straight" : "mentor");
   const [errors, setErrors] = useState<ProfileErrors>({});
-  const [lastValid, setLastValid] = useState(checkName(initial.name) ?? "");
-
-  function onName(value: string) {
-    setName(value);
-    const ok = checkName(value);
-    if (ok) setLastValid(ok);
-  }
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const result = validateProfile({ ...initial, name, style }, { demoLock: true });
+    const result = validateProfile({ ...initial, name: JOHN.name, style }, { demoLock: true });
     if (!result.ok) {
       setErrors(result.errors);
       return;
@@ -99,13 +90,8 @@ function StartFormInner({ initial }: { initial: Profile }) {
     router.push("/collection");
   }
 
-  const valid = checkName(name);
-  const nameInvalid = valid === null;
-  // An invalid entry keeps the last valid name in the preview (an empty field greets "there").
-  const shown = greetingName(valid ?? (name.trim() === "" ? "" : lastValid));
-  const edited = isNameEdited(valid ?? lastValid);
+  const shown = JOHN.name;
   const reply = firstReply(style, shown);
-  const tag = nameTag(valid, edited);
 
   return (
     <div className={styles.layout}>
@@ -123,23 +109,7 @@ function StartFormInner({ initial }: { initial: Profile }) {
           </div>
         </div>
 
-        <div className={styles.row}>
-          <div className={styles.q}>1. My name is</div>
-          <label className={styles.nameRow}>
-            <span className={styles.sr}>Your name</span>
-            <input
-              type="text"
-              maxLength={NAME_MAX}
-              value={name}
-              onChange={(e) => onName(e.target.value)}
-              autoComplete="off"
-              aria-describedby="name-tag"
-              className={`${styles.nameInput} ${edited ? styles.ink : styles.pencilText}`}
-            />
-            <span id="name-tag" className={`${styles.nameTag} ${tag.tone === "ink" ? styles.tagInk : tag.tone === "error" ? styles.tagError : ""}`}>{tag.text}</span>
-          </label>
-          {(nameInvalid || errors.name) && <span aria-live="polite" className={styles.error}>Enter a name (letters only, up to 24).</span>}
-        </div>
+        <Q n={1} text="My name is" locked><span className={`${styles.nameInput} ${styles.pencilText}`}>{JOHN.name}<span className={styles.sr}> (demo answer)</span></span></Q>
         <Q n={2} text="I work as" locked><span className={`${styles.big} ${styles.pencilText}`}>an office manager<span className={styles.sr}> (demo answer)</span></span></Q>
         <Q n={3} text="How do I use AI now?" hint="tick one" locked>
           <Ticks options={["only chat: questions & answers", "tried an AI agent", "work with agents often"]} chosen="only chat: questions & answers" />
@@ -152,7 +122,7 @@ function StartFormInner({ initial }: { initial: Profile }) {
         </Q>
 
         <fieldset className={styles.row}>
-          <legend className={styles.q}>6. How should Claude teach me? <span className={styles.hint}>(pick a sticker!)</span></legend>
+          <legend className={styles.q}>6. How should my AI teach me? <span className={styles.hint}>(pick a sticker!)</span></legend>
           <div className={styles.stickers}>
             {STICKERS.map((s) => {
               const on = style === s.value;
@@ -206,7 +176,7 @@ function StartFormInner({ initial }: { initial: Profile }) {
           </ul>
         </div>
         <div className={styles.greet} aria-live="polite">
-          <div className={styles.greetLabel}>HOW CLAUDE WILL GREET YOU · {reply.styleLabel.toUpperCase()}</div>
+          <div className={styles.greetLabel}>HOW YOUR AI WILL GREET YOU · {reply.styleLabel.toUpperCase()}</div>
           <p><span className={styles.claude}>claude ›</span> {inkGreeting(style, shown)}</p>
           <p className={styles.rule}>In your item: {reply.rule}</p>
         </div>

@@ -42,7 +42,7 @@ export const ITEMS: Partial<Record<ModuleId, Record<ItemKind, ItemDef>>> = {
   m1: {
     learn: {
       name: "Three-Tooth Key",
-      lore: "Forged for doors that never open on the first knock. Its three teeth are who you are, what you need and how it should look. Miss one and the lock just spins.",
+      lore: "Cut for doors that won't open on the first knock. Three teeth: who you are, what you need, how it should look. Get all three right and the door opens.",
       rarity: "common",
     },
     test: {

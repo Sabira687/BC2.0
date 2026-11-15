@@ -73,7 +73,7 @@ describe("albumOf", () => {
     expect(learn).toMatchObject({ name: "Three-Tooth Key", rarity: "common" });
     expect(test).toMatchObject({ name: "Proving Lock", rarity: "common" });
     expect(help).toMatchObject({ name: "Pocket Compass", rarity: "common" });
-    expect(learn!.lore).toMatch(/^Forged for doors/);
+    expect(learn!.lore).toMatch(/^Cut for doors/);
   });
 
   it("set badge and stamp totals match the shelf and the passport", () => {

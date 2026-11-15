@@ -2,11 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Card, KIND_META } from "@/components/ui";
 import type { CardProps } from "@/components/ui";
-import { revealSequence, type RevealPhase } from "@/lib/reveal";
+import { revealSequence, sparkLayout, type RevealPhase } from "@/lib/reveal";
+import { loadMuted, playChime, saveMuted } from "@/lib/sound";
 import type { ItemKind } from "@/lib/types";
 import styles from "./RevealOverlay.module.css";
 
 const SIZE = 240;
+const SPARKS = sparkLayout(14);
+const LIGHT: Record<string, string> = { learn: "#60A5FA", test: "#F0ABFC", help: "#4ADE80" };
 
 export interface RevealCard {
   kind: ItemKind;
@@ -33,18 +36,36 @@ export function RevealOverlay({ cards, onDone }: { cards: RevealCard[]; onDone: 
   const skipRef = useRef<HTMLButtonElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const muteRef = useRef<HTMLButtonElement>(null);
+  const [muted, setMuted] = useState(false);
   useEffect(() => {
     skipRef.current?.focus();
+    setMuted(loadMuted());
   }, []);
+
+  useEffect(() => {
+    if (phase !== "flip" || muted) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    playChime();
+  }, [phase, index, muted]);
+
+  function toggleMute() {
+    const next = !muted;
+    setMuted(next);
+    saveMuted(next);
+  }
 
   function onKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Escape") {
       e.preventDefault();
       finish();
     } else if (e.key === "Tab") {
-      // The only focusable control is Skip: keep focus on it.
+      // Two controls (Skip, Sound): keep focus cycling between them.
       e.preventDefault();
-      skipRef.current?.focus();
+      const order = [skipRef.current, muteRef.current];
+      const at = order.indexOf(document.activeElement as HTMLButtonElement);
+      const step = e.shiftKey ? -1 : 1;
+      order[(at + step + order.length) % order.length]?.focus();
     }
   }
 
@@ -65,6 +86,7 @@ export function RevealOverlay({ cards, onDone }: { cards: RevealCard[]; onDone: 
   const many = cards.length > 1;
   const color = KIND_META[kind].color;
   const flipped = phase === "flip" || phase === "new";
+  const light = LIGHT[kind] ?? color;
   const glowing = phase === "glow" || phase === "pause" || flipped;
   return (
     <div ref={rootRef} onKeyDown={onKeyDown} className={styles.overlay} role="dialog" aria-modal="true" aria-label={many ? "Opening your set" : "Creating your card"}>
@@ -78,11 +100,25 @@ export function RevealOverlay({ cards, onDone }: { cards: RevealCard[]; onDone: 
             <Card {...face} state={phase === "new" ? "new" : "normal"} size={SIZE} />
           </div>
         </div>
+        {phase === "flip" || phase === "new" ? (
+          <div key={index} aria-hidden="true" className={styles.sparks} style={{ ["--spark" as string]: color, ["--spark2" as string]: light }}>
+            {SPARKS.map((p, i) => (
+              <span
+                key={i}
+                className={`${styles.spark} ${p.star ? styles.star : ""}`}
+                style={{ width: p.size, height: p.size, animationDelay: `${p.delay}ms`, ["--dx" as string]: `${Math.round(Math.cos((p.angle * Math.PI) / 180) * p.dist)}px`, ["--dy" as string]: `${Math.round(Math.sin((p.angle * Math.PI) / 180) * p.dist)}px` }}
+              />
+            ))}
+          </div>
+        ) : null}
         <p className={styles.caption} role="status">
           {phase === "new" ? "NEW!" : many ? `Card ${index + 1} of ${cards.length}…` : "Creating your card…"}
         </p>
         <button ref={skipRef} type="button" className="secondary" onClick={finish}>
           {many ? "Skip all" : "Skip"}
+        </button>
+        <button ref={muteRef} type="button" className="secondary" aria-pressed={muted} onClick={toggleMute}>
+          {muted ? "Sound off" : "Sound on"}
         </button>
       </div>
     </div>

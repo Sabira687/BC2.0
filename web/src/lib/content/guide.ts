@@ -21,11 +21,11 @@ export const GUIDE_STEPS: readonly GuideStep[] = [
 ];
 
 export const GUIDE_WAYS = [
-  { name: "Your own Claude", note: "Where you already work. Bring progress back with the result code.", recommended: true },
+  { name: "Your own AI", note: "for real users · not needed for this demo", recommended: true },
   { name: "AIGO console", note: "No setup, right in the browser. Progress saves itself.", recommended: false },
 ] as const;
 
-export const GUIDE_CHECKLIST: readonly string[] = ["get Claude", "copy an item", "paste it into a new chat", "pass a lesson", "bring the result code home"];
+export const GUIDE_CHECKLIST: readonly string[] = ["get your AI", "copy an item", "paste it into a new chat", "pass a lesson", "bring the result code home"];
 
 export const GUIDE_CONNECTOR = {
   kicker: "★ WITH PREMIUM · AT LAUNCH",

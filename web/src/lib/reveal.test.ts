@@ -34,3 +34,11 @@ describe("revealSequence", () => {
     expect(ev.at(-1)!.at).toBeLessThanOrEqual(7500);
   });
 });
+
+import { sparkLayout } from "./reveal";
+describe("sparkLayout", () => {
+  it("is deterministic with the requested count", () => {
+    expect(sparkLayout(14)).toEqual(sparkLayout(14));
+    expect(sparkLayout(14)).toHaveLength(14);
+  });
+});

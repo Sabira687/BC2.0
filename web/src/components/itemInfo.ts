@@ -6,9 +6,9 @@ import type { ItemId, ItemKind } from "@/lib/types";
 export const ITEM_INFO: Record<ItemKind, { title: string; description: string; howTo: string }> = {
   learn: {
     title: "LEARN",
-    description: "Lessons on one set: Claude becomes a coach and walks you through real tasks from your own work.",
+    description: "Lessons on one set: your AI teaches you a new skill on real tasks from your own work.",
     howTo:
-      "Copy the card and paste it into a new chat in your own Claude: it activates and becomes your coach. Or try it quickly in the lesson here on the site (press “Load my Learn card”). When the set is done, take its TEST.",
+      "Copy the card and paste it into a new chat in your own AI: it activates and teaches you a new skill. Or try it quickly in the lesson here on the site (press “Load my Learn card”). When the set is done, take its TEST.",
   },
   test: {
     title: "TEST",

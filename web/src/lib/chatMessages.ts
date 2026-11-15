@@ -1,6 +1,6 @@
 /** Texts shared by the /api/chat route and the console (safe for the client bundle). */
 export const COACH_RESTING_MESSAGE =
-  "The live coach is resting. Copy an item from your collection into your own Claude: it works the same.";
+  "The live AI is resting. Copy an item from your collection into your own AI: it works the same.";
 
 export function tooManyMessagesText(retryAfterSec: number): string {
   const s = Math.max(1, Math.ceil(retryAfterSec));

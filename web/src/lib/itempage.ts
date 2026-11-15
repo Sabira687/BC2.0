@@ -73,7 +73,7 @@ export function itemPageModel(state: AppState, id: ItemId): ItemPageModel {
       ...lessons.map((l, i) => ({ code: l.id.slice(1), title: l.title, done: learnStars > i })),
       { code: "FINAL", title: "Final task", done: learnStars === 3 },
     ]);
-    use = `paste into a new chat. Claude becomes your coach for ${mod.title}.`;
+    use = `paste into a new chat. your AI teaches you ${mod.title}.`;
   } else if (kind === "test") {
     stats.push(
       { label: "TASKS", value: "3 questions + 2 practical tasks" },

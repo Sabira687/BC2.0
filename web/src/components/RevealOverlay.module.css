@@ -13,3 +13,9 @@
   .card { transition: none; }
   .sweep { animation: none; }
 }
+.stage { position: relative; }
+.sparks { position: absolute; top: 168px; left: 50%; width: 0; height: 0; pointer-events: none; }
+.spark { position: absolute; left: 0; top: 0; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--spark2); box-shadow: 0 0 8px 2px var(--spark); opacity: 0; animation: burst 0.8s ease-out forwards; }
+.star { border-radius: 0; background: var(--spark); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); box-shadow: none; }
+@keyframes burst { 0% { opacity: 1; transform: translate(0, 0) scale(0.4); } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .sparks { display: none; } }

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useAigo } from "@/lib/client/useAigo";
-import { hintFor, itemKindOf, lastStatus } from "@/lib/console";
+import { API_KEY_NOTE, hintFor, itemKindOf, lastStatus } from "@/lib/console";
 import { captureNotices, gainFor } from "@/lib/notices";
 import type { Captured } from "@/lib/capture";
 import { activeCardView } from "@/lib/markers";
@@ -110,6 +110,7 @@ export function LessonView() {
             <MoveToClaude text={lastInserted ?? learnText} buttonClassName={styles.linkButton} />
           </div>
         </div>
+        <p className={styles.keyNote}>{API_KEY_NOTE}</p>
         <div className={styles.toolbar}>
           {!loaded && itemText(learnId) !== null && (
             <button type="button" disabled={chat.busy} onClick={() => insert(itemText(learnId)!)}>
