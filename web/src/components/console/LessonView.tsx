@@ -7,7 +7,7 @@ import { captureNotices, gainFor } from "@/lib/notices";
 import type { Captured } from "@/lib/capture";
 import { activeCardView } from "@/lib/markers";
 import { START_BY_LEVEL } from "@/lib/program";
-import { promptName } from "@/lib/terminal";
+import { firstBlank, promptName } from "@/lib/terminal";
 import { itemId, kindOf, type ApplyResult } from "@/lib/progress";
 import type { ItemId } from "@/lib/types";
 import { ActiveCardPanel } from "./ActiveCardPanel";
@@ -63,6 +63,22 @@ export function LessonView() {
   };
   const insertButton = (id: ItemId) => <InsertItemButton key={id} id={id} text={itemText(id)} busy={chat.busy} onInsert={insert} />;
   const testModule = hint.status?.module ?? start;
+
+  function onChoose(key: string) {
+    if (chat.busy) return;
+    if (chat.send(key)) setGainEntry(null);
+  }
+
+  function onUseTemplate(template: string) {
+    setInput(template);
+    setTimeout(() => {
+      const el = textareaRef.current;
+      if (!el) return;
+      el.focus();
+      const b = firstBlank(template);
+      if (b) el.setSelectionRange(b[0], b[1]);
+    }, 0);
+  }
 
   function onSend() {
     if (chat.send(input)) {
@@ -131,6 +147,8 @@ export function LessonView() {
         {chat.notice && <ReplayNotice text={chat.notice} />}
         <MessageList
           name={name}
+          onChoose={onChoose}
+          onUseTemplate={onUseTemplate}
           messages={messages}
           streaming={chat.streaming}
           emptyTitle="Your lesson starts here"

@@ -93,3 +93,27 @@ describe("promptName", () => {
     expect(promptName(undefined)).toBe("you");
   });
 });
+
+import { firstBlank, parseChoices, yourTurnFrame } from "./terminal";
+describe("choices and template", () => {
+  it("parses choice lines", () => {
+    expect(parseChoices("Done!\n[1] next lesson    [2] more practice")).toEqual([
+      { key: "1", label: "next lesson" },
+      { key: "2", label: "more practice" },
+    ]);
+    expect(parseChoices("│ [1] start now [2] not yet  ")).toEqual([
+      { key: "1", label: "start now" },
+      { key: "2", label: "not yet" },
+    ]);
+    expect(parseChoices("[1] only one\nplain text [1] no")).toEqual([]);
+    expect(parseChoices("")).toEqual([]);
+  });
+  it("extracts the template", () => {
+    const t = "Your turn.\n\n┌─ YOUR TURN ───────\n│ \"I'm the ___ at ___.\n│ Format: ___.\"\n└───────\nGuide";
+    const f = yourTurnFrame(t)!;
+    expect(f.template).toBe("\"I'm the ___ at ___.\nFormat: ___.\"");
+    expect([f.from, f.to]).toEqual([3, 4]);
+    expect(yourTurnFrame("no frame")).toBeNull();
+    expect(firstBlank(f.template)).toEqual([9, 12]);
+  });
+});

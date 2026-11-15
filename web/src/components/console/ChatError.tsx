@@ -9,7 +9,7 @@ export function ChatError({ error, canRetry, onRetry }: { error: string; canRetr
     <p role="alert" className={resting ? `${styles.errorLine} ${styles.restingPlaque}` : styles.errorLine}>
       {error}{" "}
       {resting && (
-        <Link href="/guide">How to continue in your own Claude</Link>
+        <Link href="/guide">How to continue in your own AI</Link>
       )}{" "}
       {canRetry && !resting && (
         <button type="button" onClick={onRetry}>

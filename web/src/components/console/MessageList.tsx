@@ -1,10 +1,10 @@
-import type { ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 import { ItemArt } from "@/components/ui/ItemArt";
 import type { ChatMessage } from "@/lib/chat";
 import { displayText } from "@/lib/console";
 import { DATA_OPEN } from "@/lib/encode";
 import { activeCard, pastedCard } from "@/lib/markers";
-import { classifyReply } from "@/lib/terminal";
+import { classifyReply, parseChoices, yourTurnFrame } from "@/lib/terminal";
 import type { ItemKind } from "@/lib/types";
 import styles from "./console.module.css";
 
@@ -55,15 +55,48 @@ function UserRow({ message, name }: { message: ChatMessage; name: string }) {
 }
 
 /** Claude's text as a terminal block: frames, marks, stars and marker lines coloured by lib/terminal. */
-function ClaudeText({ text, kind }: { text: string; kind: ItemKind | null }) {
-  const lines = classifyReply(displayText(text));
+function ClaudeText({ text, kind, interactive, disabled, onChoose, onUseTemplate }: { text: string; kind: ItemKind | null; interactive?: boolean; disabled?: boolean; onChoose?: (key: string) => void; onUseTemplate?: (template: string) => void }) {
+  const shown = displayText(text);
+  const lines = classifyReply(shown);
+  const frame = interactive && onUseTemplate ? yourTurnFrame(shown) : null;
+  const choices = interactive && onChoose ? parseChoices(shown) : [];
   return (
     <div className={styles.reply} data-kind={kind ?? undefined}>
-      {lines.map((l, i) => (
-        <div key={i} className={styles.tl} data-marker={l.marker}>
-          {l.spans.length === 0 ? "\u00a0" : l.spans.map((s, j) => (s.tone === "plain" ? <span key={j}>{s.text}</span> : <span key={j} className={styles[`t_${s.tone}`]}>{s.text}</span>))}
+      {lines.map((l, i) => {
+        const inFrame = frame !== null && i >= frame.from && i <= frame.to && l.spans[0]?.tone === "frame";
+        return (
+          <div
+            key={i}
+            className={inFrame ? `${styles.tl} ${styles.tplLine}` : styles.tl}
+            data-marker={l.marker}
+            {...(inFrame
+              ? {
+                  role: "button",
+                  tabIndex: 0,
+                  title: "Click to put this template in your answer box",
+                  onClick: () => onUseTemplate!(frame.template),
+                  onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onUseTemplate!(frame.template);
+                    }
+                  },
+                }
+              : {})}
+          >
+            {l.spans.length === 0 ? "\u00a0" : l.spans.map((s, j) => (s.tone === "plain" ? <span key={j}>{s.text}</span> : <span key={j} className={styles[`t_${s.tone}`]}>{s.text}</span>))}
+          </div>
+        );
+      })}
+      {choices.length > 0 && (
+        <div className={styles.choices} role="group" aria-label="Quick replies">
+          {choices.map((c) => (
+            <button key={c.key} type="button" className={styles.choiceChip} disabled={disabled} onClick={() => onChoose!(c.key)}>
+              <b>{c.key}</b> {c.label}
+            </button>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }
@@ -91,6 +124,8 @@ export function MessageList({
   emptyText,
   sampleCount = 0,
   name = "you",
+  onChoose,
+  onUseTemplate,
 }: {
   messages: readonly ChatMessage[];
   streaming: string | null;
@@ -100,6 +135,10 @@ export function MessageList({
   sampleCount?: number;
   /** Prompt name for the player's rows (lowercase). */
   name?: string;
+  /** Clicking a [1]/[2] chip sends that key as the next message. */
+  onChoose?: (key: string) => void;
+  /** Clicking the YOUR TURN frame passes its template to the input. */
+  onUseTemplate?: (template: string) => void;
 }) {
   return (
     <div className={styles.feed}>
@@ -117,7 +156,7 @@ export function MessageList({
             <UserRow key={i} message={m} name={name} />
           ) : (
             <ClaudeRow key={i} sample={i < sampleCount}>
-              <ClaudeText text={m.content} kind={activeCard(messages.slice(0, i + 1))?.kind ?? null} />
+              <ClaudeText text={m.content} kind={activeCard(messages.slice(0, i + 1))?.kind ?? null} interactive={i === messages.length - 1 && streaming === null} disabled={streaming !== null} onChoose={onChoose} onUseTemplate={onUseTemplate} />
             </ClaudeRow>
           ),
         )}

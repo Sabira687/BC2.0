@@ -7,7 +7,7 @@ import { captureNotices, gainFor } from "@/lib/notices";
 import type { Captured } from "@/lib/capture";
 import { activeCard, cardView, helpUsedSeen } from "@/lib/markers";
 import { START_BY_LEVEL } from "@/lib/program";
-import { promptName } from "@/lib/terminal";
+import { firstBlank, promptName } from "@/lib/terminal";
 import { setBadgeSteps } from "@/lib/progress";
 import { REPLAY_HELP_HISTORY } from "@/lib/content/replays";
 import { SAMPLE_WORK_CHAT, helpUsedIn, startsWithSample, workChatHint } from "@/lib/workchat";
@@ -47,6 +47,22 @@ export function WorkChatView() {
   const name = promptName(state.profile.name);
   const badge = setBadgeSteps(state, start);
   const helpCard = cardView(state, "help");
+
+  function onChoose(key: string) {
+    if (chat.busy) return;
+    if (chat.send(key)) setGainEntry(null);
+  }
+
+  function onUseTemplate(template: string) {
+    setInput(template);
+    setTimeout(() => {
+      const el = textareaRef.current;
+      if (!el) return;
+      el.focus();
+      const b = firstBlank(template);
+      if (b) el.setSelectionRange(b[0], b[1]);
+    }, 0);
+  }
 
   function onSend() {
     if (chat.send(input)) {
@@ -112,6 +128,8 @@ export function WorkChatView() {
         {chat.notice && <ReplayNotice text={chat.notice} />}
         <MessageList
           name={name}
+          onChoose={onChoose}
+          onUseTemplate={onUseTemplate}
           messages={messages}
           streaming={chat.streaming}
           emptyTitle="Your work chat is empty"

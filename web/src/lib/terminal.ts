@@ -90,3 +90,52 @@ export function promptName(name: string | undefined | null): string {
   const w = (name ?? "").trim().split(/\s+/)[0] ?? "";
   return w === "" ? "you" : w.toLowerCase();
 }
+
+export interface Choice {
+  key: string;
+  label: string;
+}
+
+/** Choice lines like `[1] next lesson    [2] more practice` (optionally inside a │ frame). Needs 2+ choices on a line. */
+export function parseChoices(text: string): Choice[] {
+  if (typeof text !== "string") return [];
+  const out: Choice[] = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.replace(/^[\s│]+/, "");
+    if (!/^\[\d\]\s*\S/.test(line)) continue;
+    const found: Choice[] = [];
+    for (const m of line.matchAll(/\[(\d)\]\s*([^[]*)/g)) {
+      const label = m[2]!.replace(/[\s│]+$/, "").trim();
+      if (label !== "") found.push({ key: m[1]!, label });
+    }
+    if (found.length >= 2) out.push(...found);
+  }
+  return out;
+}
+
+/** The "┌─ YOUR TURN" frame: its │ lines (without the prefix) as a template, and the line range they cover. */
+export function yourTurnFrame(text: string): { template: string; from: number; to: number } | null {
+  if (typeof text !== "string") return null;
+  const lines = text.split(/\r?\n/);
+  const start = lines.findIndex((l) => /^┌─+\s*YOUR TURN/.test(l));
+  if (start < 0) return null;
+  const body: string[] = [];
+  let from = -1;
+  let to = -1;
+  for (let i = start + 1; i < lines.length; i++) {
+    const l = lines[i]!;
+    if (/^[└┌]/.test(l)) break;
+    if (!SIDE_BAR.test(l)) continue;
+    if (from < 0) from = i;
+    to = i;
+    body.push(l.replace(SIDE_BAR, ""));
+  }
+  const template = body.join("\n").trim();
+  return template === "" ? null : { template, from, to };
+}
+
+/** Selection range of the first `___` blank in a template (or null). */
+export function firstBlank(template: string): [number, number] | null {
+  const m = /_{3,}/.exec(template);
+  return m ? [m.index, m.index + m[0].length] : null;
+}
