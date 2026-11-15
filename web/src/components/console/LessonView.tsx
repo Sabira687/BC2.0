@@ -145,7 +145,7 @@ export function LessonView() {
   }
 
   function onSeeResult(code: string) {
-    actions.applyResultCode(code);
+    // /result/<code> applies the code once and shows the full result screen.
     router.push(`/result/${encodeURIComponent(code)}`);
   }
 
