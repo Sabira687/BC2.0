@@ -14,12 +14,12 @@ export const ITEM_INFO: Record<ItemKind, { title: string; description: string; h
     title: "TEST",
     description: "3 questions + 2 practical tasks on one set. You get a score out of 100, stars and a RESULT CODE.",
     howTo:
-      "After the set's LEARN, copy the card and paste it into a new chat in your own Claude (or try it in the lesson here). It ends with a RESULT CODE: add it on the Progress page.",
+      "After the set's LEARN, copy the card and paste it into a new chat in your own AI (or try it in the lesson here). It ends with a RESULT CODE: add it on the Progress page.",
   },
   help: {
     title: "HELP",
     description: "One-shot advice: Claude looks at where you are and suggests the best next move.",
-    howTo: "Copy the card and paste it mid-task in your own Claude. It activates, helps once, then the chat goes on as usual.",
+    howTo: "Copy the card and paste it mid-task in your own AI. It activates, helps once, then the chat goes on as usual.",
   },
 };
 

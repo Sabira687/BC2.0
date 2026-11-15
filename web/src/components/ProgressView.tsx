@@ -184,7 +184,7 @@ export function ProgressView() {
 
       <section aria-label="Add a result code" className={styles.codeBox}>
         <div className={styles.codeIntro}>
-          <strong>Took a test in your own Claude?</strong>
+          <strong>Took a test in your own AI?</strong>
           <p>Paste the result code from the end of the test. Your stars and stamps come back here.</p>
         </div>
         <div className={styles.codeForm}>

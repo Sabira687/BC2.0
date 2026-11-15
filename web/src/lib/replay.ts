@@ -12,7 +12,7 @@ import { REPLAY_HELP, REPLAY_LEARN_L11, REPLAY_LEARN_L11_USER } from "./content/
 /** Plaque shown above the chat while replaying (the link to /guide is rendered by the component). */
 export const REPLAY_PLAQUE_TEXT =
   "REPLAY · the live AI is unavailable right now, these are real Claude replies recorded earlier. Progress isn't counted here.";
-export const REPLAY_PLAQUE_LINK = "Use your own Claude";
+export const REPLAY_PLAQUE_LINK = "Use your own AI";
 
 /** Failed live call → play the recording: 503, any 5xx, network error, 429 of the GLOBAL limit (a per-IP 429 keeps its own message). */
 export function shouldReplay(status: number | "network", scope?: string | null): boolean {

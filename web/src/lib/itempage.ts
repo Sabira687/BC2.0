@@ -53,7 +53,7 @@ export function itemPageModel(state: AppState, id: ItemId): ItemPageModel {
   const result = module ? state.results[module] : undefined;
   const stars: Stars | null = kind === "help" ? null : kind === "learn" ? (learnStars as Stars) : ((result ? testStars(result.score) : 0) as Stars);
   const setNumber = set?.number ?? "01";
-  const worksIn = mod.runsIn === "console" ? "AIGO console · your own Claude" : "your own Claude";
+  const worksIn = mod.runsIn === "console" ? "AIGO console · your own AI" : "your own AI";
 
   const practice = itemSummary(state.profile, module, kind).project;
   const stats: ItemPageModel["stats"] = [];
@@ -94,7 +94,7 @@ export function itemPageModel(state: AppState, id: ItemId): ItemPageModel {
     stats.push(
       { label: "USE", value: "any moment, mid-task" },
       { label: "TIME", value: "about 1 minute" },
-      { label: "WORKS IN", value: "AIGO console · your own Claude" },
+      { label: "WORKS IN", value: "AIGO console · your own AI" },
       { label: "USED", value: state.helpUsed ? "yes" : "not yet" },
       { label: "SET BADGE", value: `${badge.done} of ${badge.total} steps` },
     );
